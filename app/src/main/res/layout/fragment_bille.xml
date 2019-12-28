@@ -1,13 +1,55 @@
-<FrameLayout    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/imgBille"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:srcCompat="@drawable/bille" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/imgBille1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille4"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille5"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille6"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+        <ImageButton
+            android:id="@+id/imgBille7"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/bille" />
+
+    </LinearLayout>
 
 </FrameLayout>

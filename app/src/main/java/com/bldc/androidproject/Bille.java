@@ -9,13 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
+
 public class Bille extends Fragment {
-    private ImageButton imageBille = null;
+    private ArrayList<ImageButton> listImageBille = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bille, container, false);
-        imageBille = (ImageButton) view.findViewById(R.id.imgBille);
+        listImageBille = new ArrayList<>();
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille1));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille2));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille3));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille4));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille5));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille6));
+        listImageBille.add((ImageButton) view.findViewById(R.id.imgBille7));
         return view;
     }
 

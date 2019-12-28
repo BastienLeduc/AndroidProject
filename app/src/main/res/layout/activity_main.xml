@@ -7,9 +7,11 @@
     android:focusableInTouchMode="true">
     tools:context=".MainActivity">
 
-    <GridLayout
-        android:id="@+id/gridbilles"
+    <LinearLayout
+        android:id="@+id/lineBille"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </LinearLayout>
 
 </LinearLayout>

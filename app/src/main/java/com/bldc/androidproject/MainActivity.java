@@ -8,21 +8,22 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Bille> listBille;
-    private final int nbBille = 33;
+    private ArrayList<Bille> listLigneBille;
+    private final int nbBille = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listBille = new ArrayList<>();
+        listLigneBille = new ArrayList<>();
+        createBille();
     }
 
     private void createBille() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         for(int i=0; i<nbBille ; i++) {
-            listBille.add(new Bille());
-            ft.add(R.id.gridbilles,listBille.get(i));
+            listLigneBille.add(new Bille());
+            ft.add(R.id.lineBille,listLigneBille.get(i));
         }
         ft.commit();
     }
