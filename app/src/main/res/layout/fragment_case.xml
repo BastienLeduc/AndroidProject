@@ -6,8 +6,9 @@
 
     <ImageButton
         android:id="@+id/imgcase"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        app:srcCompat="@drawable/bille" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="1dp"
+        android:background="@color/colorPrimaryDark" />
 
 </FrameLayout>
