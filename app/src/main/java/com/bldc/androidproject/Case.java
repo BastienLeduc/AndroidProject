@@ -51,6 +51,12 @@ public class Case extends Fragment {
         }
     }
 
+    public boolean isSeleceted() {
+        return seleceted;
+    }
 
+    public void setSeleceted(boolean seleceted) {
+        this.seleceted = seleceted;
+    }
 }
 
