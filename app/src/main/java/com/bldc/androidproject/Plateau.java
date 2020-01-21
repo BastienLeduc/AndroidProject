@@ -101,7 +101,7 @@ public class Plateau extends Fragment {
     public ArrayList<Case> verif(GridLayout plat, View v) {
         ArrayList<Case> lCase = new ArrayList<Case>();
         for (int i = 0; i < plat.getChildCount(); i++) {
-            if (((int)plat.getChildAt(i).getY() + 2) < nbLigneCol) {
+            if (((int) plat.getChildAt(i).getY() + 2) < nbLigneCol && (int) plat.getChildAt(i).getX() < nbLigneCol) {
                 if (tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() + 2] != null) {
                     Case c = (Case) tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() + 2];
                     if (c != null && c.getState() == true) {
@@ -110,8 +110,8 @@ public class Plateau extends Fragment {
                     }
                 }
             }
-            if (((int)plat.getChildAt(i).getX() + 2) < nbLigneCol) {
-                if (tabIm[(int) plat.getChildAt(i).getX() + 2][(int) plat.getChildAt(i).getY()] != null) {
+            if (((int) plat.getChildAt(i).getX() + 2) < nbLigneCol && (int) plat.getChildAt(i).getY() < nbLigneCol) {
+                if (tabIm[((int) plat.getChildAt(i).getX() + 2)][(int) plat.getChildAt(i).getY()] != null) {
                     Case c = (Case) tabIm[(int) plat.getChildAt(i).getX() + 2][(int) plat.getChildAt(i).getY()];
                     if (c != null && c.getState() == true) {
                         lCase.add(c);
@@ -119,7 +119,7 @@ public class Plateau extends Fragment {
                     }
                 }
             }
-            if (plat.getChildAt(i).getX() - 2 > 0) {
+            if (plat.getChildAt(i).getX() - 2 > 0 && (int) plat.getChildAt(i).getY() < nbLigneCol &&  (int) plat.getChildAt(i).getX() <nbLigneCol) {
                 if (tabIm[(int) plat.getChildAt(i).getX() - 2][(int) plat.getChildAt(i).getY()] != null) {
                     Case c = (Case) tabIm[(int) plat.getChildAt(i).getX() - 2][(int) plat.getChildAt(i).getY()];
                     if (c != null && c.getState() == true) {
@@ -128,7 +128,7 @@ public class Plateau extends Fragment {
                     }
                 }
             }
-            if (plat.getChildAt(i).getY() - 2 > 0) {
+            if (plat.getChildAt(i).getY() - 2 > 0 && (int) plat.getChildAt(i).getX() < nbLigneCol && (int) plat.getChildAt(i).getY() < nbLigneCol) {
                 if (tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() - 2] != null) {
                     Case c = (Case) tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() - 2];
                     if (c != null && c.getState() == true) {
