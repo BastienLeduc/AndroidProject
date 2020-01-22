@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,26 +69,20 @@ public class Plateau extends Fragment {
                     params.columnSpec = GridLayout.spec(i);
                     params.rowSpec = GridLayout.spec(j);
                     imB.setLayoutParams(params);
-                    final int finalI = i;
-                    final int finalJ = j;
                     imB.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             ArrayList<Case> lCaseSt = verif(plateau, view);
 
-                            if (lCaseSt != null) {
+                            Log.e("lenLCase", lCaseSt.size() + "");
+                            if (lCaseSt.size() > 0) {
                                 for (Case c : lCaseSt) {
-                                    playOneBall(plateau, (int) c.getX(), (int) c.getY(), finalI, finalJ);
+                                    playOneBall(plateau, (int) c.getX(), (int) c.getY(), (int) view.getX(), (int) view.getY());
                                 }
-                            } else {
-                                Case t = (Case) view;
-                                t.setState(true);
                             }
+                            Case t = (Case) view;
+                            t.setState(true);
 
-                            /*for (int i = 0; i < plateau.getChildCount(); i++) {
-                                if (plateau.getChildAt(i).isSelected() && finalImB.isSelected()) {
-                                }
-                            }*/
 
                         }
                     });
@@ -100,56 +95,69 @@ public class Plateau extends Fragment {
 
     public ArrayList<Case> verif(GridLayout plat, View v) {
         ArrayList<Case> lCase = new ArrayList<Case>();
-        for (int i = 0; i < plat.getChildCount(); i++) {
-            if (((int) plat.getChildAt(i).getY() + 2) < nbLigneCol && (int) plat.getChildAt(i).getX() < nbLigneCol) {
-                if (tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() + 2] != null) {
-                    Case c = (Case) tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() + 2];
-                    if (c != null && c.getState() == true) {
-                        lCase.add(c);
+        Case caseSel = (Case) v;
 
+        if (((int) caseSel.getY() + 2) < nbLigneCol && (int) caseSel.getX() < nbLigneCol) {
+            Log.e("testscol", "y+2");
+            if (tabIm[(int) caseSel.getX()][(int) caseSel.getY() + 2] != null) {
+                Log.e("testsnul", "y+2");
+                for (int j = 0; j < plat.getChildCount(); j++) {
+                    {
+                        Case c = (Case) plat.getChildAt(j);
+                        if (c.getY() == (int) caseSel.getY() + 2 && c.getX() == (int) caseSel.getX() && c.getState()) {
+                            Log.e("tests", "y+2");
+                            lCase.add(c);
+                        }
                     }
                 }
             }
-            if (((int) plat.getChildAt(i).getX() + 2) < nbLigneCol && (int) plat.getChildAt(i).getY() < nbLigneCol) {
-                if (tabIm[((int) plat.getChildAt(i).getX() + 2)][(int) plat.getChildAt(i).getY()] != null) {
-                    Case c = (Case) tabIm[(int) plat.getChildAt(i).getX() + 2][(int) plat.getChildAt(i).getY()];
-                    if (c != null && c.getState() == true) {
-                        lCase.add(c);
-
-                    }
-                }
-            }
-            if (plat.getChildAt(i).getX() - 2 > 0 && (int) plat.getChildAt(i).getY() < nbLigneCol &&  (int) plat.getChildAt(i).getX() <nbLigneCol) {
-                if (tabIm[(int) plat.getChildAt(i).getX() - 2][(int) plat.getChildAt(i).getY()] != null) {
-                    Case c = (Case) tabIm[(int) plat.getChildAt(i).getX() - 2][(int) plat.getChildAt(i).getY()];
-                    if (c != null && c.getState() == true) {
-                        lCase.add(c);
-
-                    }
-                }
-            }
-            if (plat.getChildAt(i).getY() - 2 > 0 && (int) plat.getChildAt(i).getX() < nbLigneCol && (int) plat.getChildAt(i).getY() < nbLigneCol) {
-                if (tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() - 2] != null) {
-                    Case c = (Case) tabIm[(int) plat.getChildAt(i).getX()][(int) plat.getChildAt(i).getY() - 2];
-                    if (c != null && c.getState() == true) {
-                        lCase.add(c);
-
-                    }
-                }
-            }
-            /*if ((plat.getRowCount() < plat.getChildAt(i).getY() + 2 && plat.getColumnCount() < plat.getChildAt(i).getX()) &&
-                    (plat.getRowCount() < plat.getChildAt(i).getY() - 2 && plat.getColumnCount() < plat.getChildAt(i).getX()) &&
-                    (plat.getRowCount() < plat.getChildAt(i).getY() && plat.getColumnCount() < plat.getChildAt(i).getX() + 2) &&
-                    (plat.getRowCount() < plat.getChildAt(i).getY() && plat.getColumnCount() < plat.getChildAt(i).getX() - 2)) {
-
-            }*/
         }
-        /*if ((plat.getRowCount() < v.getY() + 2 && plat.getColumnCount() < v.getX()) &&
-                (plat.getRowCount() < v.getY() - 2 && plat.getColumnCount() < v.getX()) &&
-                (plat.getRowCount() < v.getY() && plat.getColumnCount() < v.getX() + 2) &&
-                (plat.getRowCount() < v.getY() && plat.getColumnCount() < v.getX() - 2)) {
-            return true;
-        } else return false;*/
+        if (((int) caseSel.getX() + 2) < nbLigneCol && (int) caseSel.getY() < nbLigneCol) {
+            Log.e("testscol", "x+2");
+            if (tabIm[((int) caseSel.getX() + 2)][(int) caseSel.getY()] != null) {
+                Log.e("testsnull", "x+2");
+                for (int j = 0; j < plat.getChildCount(); j++) {
+                    {
+                        Case c = (Case) plat.getChildAt(j);
+                        if (c.getY() == (int) caseSel.getY() && c.getX() == (int) caseSel.getX() + 2 && c.getState()) {
+                            Log.e("tests", "x+2");
+                            lCase.add(c);
+                        }
+                    }
+                }
+            }
+        }
+        if (caseSel.getX() - 2 > 0 && (int) caseSel.getY() < nbLigneCol && (int) caseSel.getX() < nbLigneCol) {
+            Log.e("testscol", "x-2");
+            if (tabIm[(int) caseSel.getX() - 2][(int) caseSel.getY()] != null) {
+                Log.e("testsnull", "x-2");
+                for (int j = 0; j < plat.getChildCount(); j++) {
+                    {
+                        Case c = (Case) plat.getChildAt(j);
+                        if (c.getY() == (int) caseSel.getY() && c.getX() == (int) caseSel.getX() - 2 && c.getState()) {
+                            Log.e("tests", "x-2");
+                            lCase.add(c);
+                        }
+                    }
+                }
+            }
+        }
+        if (caseSel.getY() - 2 > 0 && (int) caseSel.getX() < nbLigneCol && (int) caseSel.getY() < nbLigneCol) {
+            Log.e("testscol", "y-2");
+            if (tabIm[(int) caseSel.getX()][(int) caseSel.getY() - 2] != null) {
+                Log.e("testsnull", "y-2");
+                for (int j = 0; j < plat.getChildCount(); j++) {
+                    {
+                        Case c = (Case) plat.getChildAt(j);
+                        if (c.getY() == (int) caseSel.getY() - 2 && c.getX() == (int) caseSel.getX() && c.getState()) {
+                            Log.e("tests", "y-2");
+                            lCase.add(c);
+                        }
+                    }
+                }
+            }
+
+        }
         return lCase;
 
     }
@@ -165,21 +173,20 @@ public class Plateau extends Fragment {
         int valMidY = (y1 + y2) / 2;
         if ((x1 == x2 && Math.abs(y1 - y2) == 2) || (y1 == y2 && Math.abs(x1 - x2) == 2))
             for (int i = 0; i < plat.getChildCount(); i++) {
-                if (plat.getChildAt(i).getX() == valMidX && plat.getChildAt(i).getY() == valMidY) {
-                    if (!plat.getChildAt(i).isActivated()) {
+                Case c = (Case) plat.getChildAt(i);
+                if (c.getX() == valMidX && c.getY() == valMidY) {
+                    if (c.getUse()) {
                         nbCoups++;
                         nbBilles--;
                     }
                 }
-                if (plat.getChildAt(i).getX() == x1 && plat.getChildAt(i).getY() == y1) {
-                    if (plat.getChildAt(i).isActivated()) plat.getChildAt(i).setActivated(false);
+                if (c.getX() == x1 && c.getY() == y1) {
+                    if (c.getUse()) c.setUse(false);
                 }
-                if (plat.getChildAt(i).getX() == x2 && plat.getChildAt(i).getY() == y2) {
-                    if (plat.getChildAt(i).isActivated()) plat.getChildAt(i).setActivated(true);
+                if (c.getX() == x2 && c.getY() == y2) {
+                    if (!c.getUse()) c.setUse(true);
                 }
 
             }
-
     }
 }
-
