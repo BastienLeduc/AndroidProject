@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.min;
+
 @SuppressLint("ValidFragment")
 public class Plateau extends Fragment {
 
@@ -30,7 +33,9 @@ public class Plateau extends Fragment {
     private final ArrayList<Integer> noneActivCase = new ArrayList<Integer>(Arrays.asList(listValue));
     private int nbCoups;
     private int nbBilles;
-    private Case[][] tabIm;
+    int selectedX;
+    int selectedY;
+    private Case[][] tabIm = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -39,6 +44,8 @@ public class Plateau extends Fragment {
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         nbCoups = 0;
         nbBilles = 0;
+        selectedX = -1;
+        selectedY = -1;
         tabIm = new Case[nbLigneCol][nbLigneCol];
         createCase();
         return view;
@@ -49,15 +56,16 @@ public class Plateau extends Fragment {
         plateau.setRowCount(nbLigneCol);
         plateau.setColumnCount(nbLigneCol);
 
+
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
                 } else {
                     Case imB = null;
                     if (i == Math.round(nbLigneCol / 2) && j == Math.round(nbLigneCol / 2)) {
-                        imB = new Case(getContext(), false, false);
+                        imB = new Case(getContext(), false, false, i, j);
                     } else {
-                        imB = new Case(getContext(), false, true);
+                        imB = new Case(getContext(), false, true, i, j);
                     }
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                     params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
@@ -72,21 +80,106 @@ public class Plateau extends Fragment {
                     imB.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ArrayList<Case> lCaseSt = verif(plateau, view);
-
-                            Log.e("lenLCase", lCaseSt.size() + "");
-                            if (lCaseSt.size() > 0) {
-                                for (Case c : lCaseSt) {
-                                    playOneBall(plateau, (int) c.getX(), (int) c.getY(), (int) view.getX(), (int) view.getY());
+                            Case selected = (Case) view;
+                            if (selected.getUse()) // si la case selectionnee contient une bille
+                            {
+                                if (selectedX != -1 && selectedY != -1) {
+                                    tabIm[selectedX][selectedY].setState(false); // on deselectionne la case qui etait selectionnee
+                                }
+                                selectedX = (int) selected.getXc(); // on stocke X
+                                selectedY = (int) selected.getYc(); //           Y
+                                tabIm[selectedX][selectedY].setState(true); // on selectionne la case
+                                updatePlateau(); // on met a jour le plateau
+                            } else if (selectedX != -1 && selectedY != -1) // si la case est vide
+                            {
+                                int targetX = (int) selected.getXc(); // on stocke la valeur d'arrivee potentielle
+                                int targetY = (int) selected.getYc();
+                                // si on souhaite realiser un coup selon l'axe X
+                                if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
+                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
+                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
+                                    nbCoups++;
+                                    nbBilles--;
+                                    // isEnded(); // verifie si le joueur a fini ou non sa partie
+                                    updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
+                                } // si on souhaite realiser un coup selon l'axe Y
+                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][abs(selectedY - targetY) + 1].getUse()) {
+                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
+                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
+                                    tabIm[selectedX][abs(selectedY - targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    nbCoups++;
+                                    nbBilles--;
+                                    // isEnded();
+                                    updatePlateau();
                                 }
                             }
-                            Case t = (Case) view;
-                            t.setState(true);
-
-
                         }
                     });
                     tabIm[i][j] = imB;
+                    plateau.addView(imB);
+                }
+            }
+        }
+
+    }
+
+    private void updatePlateau() {
+        plateau.removeAllViews(); // on vide tout le plateau
+        for (int i = 0; i < nbLigneCol; i++) {
+            for (int j = 0; j < nbLigneCol; j++) {
+                if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
+                } else {
+                    Case imB = tabIm[i][j];
+                    GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                    params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+                    params.columnSpec = GridLayout.spec(i);
+                    params.rowSpec = GridLayout.spec(j);
+                    imB.setLayoutParams(params);
+                    imB.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Case selected = (Case) view;
+                            if (selected.getUse()) // si la case selectionnee contient une bille
+                            {
+                                if (selectedX != -1 && selectedY != -1) {
+                                    tabIm[selectedX][selectedY].setState(false); // on deselectionne la case qui etait selectionnee
+                                }
+                                selectedX = (int) selected.getXc(); // on stocke X
+                                selectedY = (int) selected.getYc(); //           Y
+                                tabIm[selectedX][selectedY].setState(true); // on selectionne la case
+                                updatePlateau(); // on met a jour le plateau
+                            } else if (selectedX != -1 && selectedY != -1) // si la case est vide
+                            {
+                                int targetX = (int) selected.getXc(); // on stocke la valeur d'arrivee potentielle
+                                int targetY = (int) selected.getYc();
+                                // si on souhaite realiser un coup selon l'axe X
+                                if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
+                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
+                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
+                                    nbCoups++;
+                                    nbBilles--;
+                                    // isEnded(); // verifie si le joueur a fini ou non sa partie
+                                    updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
+                                } // si on souhaite realiser un coup selon l'axe Y
+                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][abs(selectedY - targetY) + 1].getUse()) {
+                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
+                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
+                                    tabIm[selectedX][abs(selectedY - targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    nbCoups++;
+                                    nbBilles--;
+                                    // isEnded();
+                                    updatePlateau();
+                                }
+                            }
+                        }
+                    });
                     plateau.addView(imB);
                 }
             }
@@ -171,7 +264,7 @@ public class Plateau extends Fragment {
     private void playOneBall(GridLayout plat, int x1, int y1, int x2, int y2) {
         int valMidX = (x1 + x2) / 2;
         int valMidY = (y1 + y2) / 2;
-        if ((x1 == x2 && Math.abs(y1 - y2) == 2) || (y1 == y2 && Math.abs(x1 - x2) == 2))
+        if ((x1 == x2 && abs(y1 - y2) == 2) || (y1 == y2 && abs(x1 - x2) == 2))
             for (int i = 0; i < plat.getChildCount(); i++) {
                 Case c = (Case) plat.getChildAt(i);
                 if (c.getX() == valMidX && c.getY() == valMidY) {
