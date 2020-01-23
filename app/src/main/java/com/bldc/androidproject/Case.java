@@ -27,7 +27,7 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         if (this.use) {
             this.setBackgroundColor(this.getContext().getResources().getColor(R.color.colorPrimaryDark));
         } else {
-            this.setBackgroundColor(this.getContext().getResources().getColor(R.color.colorBack));
+            this.setBackgroundColor(this.getContext().getResources().getColor(R.color.colorBackCase));
         }
 
     }

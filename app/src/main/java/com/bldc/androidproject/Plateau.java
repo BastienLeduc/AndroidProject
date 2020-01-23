@@ -43,7 +43,7 @@ public class Plateau extends Fragment {
         plateau = (GridLayout) view.findViewById(R.id.plateau);
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         nbCoups = 0;
-        nbBilles = 0;
+        nbBilles = 32;
         selectedX = -1;
         selectedY = -1;
         tabIm = new Case[nbLigneCol][nbLigneCol];
@@ -101,15 +101,19 @@ public class Plateau extends Fragment {
                                     tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
                                     nbCoups++;
                                     nbBilles--;
+                                    selectedX = -1;
+                                    selectedY = -1;
                                     // isEnded(); // verifie si le joueur a fini ou non sa partie
                                     updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
                                 } // si on souhaite realiser un coup selon l'axe Y
-                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][abs(selectedY - targetY) + 1].getUse()) {
+                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
                                     tabIm[selectedX][selectedY].setUse(false); // on prend la bille
                                     tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[selectedX][abs(selectedY - targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // on enleve la bille intermediaire
                                     nbCoups++;
                                     nbBilles--;
+                                    selectedX = -1;
+                                    selectedY = -1;
                                     // isEnded();
                                     updatePlateau();
                                 }
@@ -165,121 +169,40 @@ public class Plateau extends Fragment {
                                     tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
                                     nbCoups++;
                                     nbBilles--;
+                                    selectedX = -1;
+                                    selectedY = -1;
                                     // isEnded(); // verifie si le joueur a fini ou non sa partie
                                     updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
                                 } // si on souhaite realiser un coup selon l'axe Y
-                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][abs(selectedY - targetY) + 1].getUse()) {
+                                else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
                                     tabIm[selectedX][selectedY].setUse(false); // on prend la bille
                                     tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[selectedX][abs(selectedY - targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // on enleve la bille intermediaire
                                     nbCoups++;
                                     nbBilles--;
+                                    selectedX = -1;
+                                    selectedY = -1;
                                     // isEnded();
                                     updatePlateau();
                                 }
                             }
                         }
                     });
+                    tabIm[i][j] = imB;
                     plateau.addView(imB);
                 }
             }
         }
-    }
-
-    public ArrayList<Case> verif(GridLayout plat, View v) {
-        ArrayList<Case> lCase = new ArrayList<Case>();
-        Case caseSel = (Case) v;
-
-        if (((int) caseSel.getY() + 2) < nbLigneCol && (int) caseSel.getX() < nbLigneCol) {
-            Log.e("testscol", "y+2");
-            if (tabIm[(int) caseSel.getX()][(int) caseSel.getY() + 2] != null) {
-                Log.e("testsnul", "y+2");
-                for (int j = 0; j < plat.getChildCount(); j++) {
-                    {
-                        Case c = (Case) plat.getChildAt(j);
-                        if (c.getY() == (int) caseSel.getY() + 2 && c.getX() == (int) caseSel.getX() && c.getState()) {
-                            Log.e("tests", "y+2");
-                            lCase.add(c);
-                        }
-                    }
-                }
-            }
-        }
-        if (((int) caseSel.getX() + 2) < nbLigneCol && (int) caseSel.getY() < nbLigneCol) {
-            Log.e("testscol", "x+2");
-            if (tabIm[((int) caseSel.getX() + 2)][(int) caseSel.getY()] != null) {
-                Log.e("testsnull", "x+2");
-                for (int j = 0; j < plat.getChildCount(); j++) {
-                    {
-                        Case c = (Case) plat.getChildAt(j);
-                        if (c.getY() == (int) caseSel.getY() && c.getX() == (int) caseSel.getX() + 2 && c.getState()) {
-                            Log.e("tests", "x+2");
-                            lCase.add(c);
-                        }
-                    }
-                }
-            }
-        }
-        if (caseSel.getX() - 2 > 0 && (int) caseSel.getY() < nbLigneCol && (int) caseSel.getX() < nbLigneCol) {
-            Log.e("testscol", "x-2");
-            if (tabIm[(int) caseSel.getX() - 2][(int) caseSel.getY()] != null) {
-                Log.e("testsnull", "x-2");
-                for (int j = 0; j < plat.getChildCount(); j++) {
-                    {
-                        Case c = (Case) plat.getChildAt(j);
-                        if (c.getY() == (int) caseSel.getY() && c.getX() == (int) caseSel.getX() - 2 && c.getState()) {
-                            Log.e("tests", "x-2");
-                            lCase.add(c);
-                        }
-                    }
-                }
-            }
-        }
-        if (caseSel.getY() - 2 > 0 && (int) caseSel.getX() < nbLigneCol && (int) caseSel.getY() < nbLigneCol) {
-            Log.e("testscol", "y-2");
-            if (tabIm[(int) caseSel.getX()][(int) caseSel.getY() - 2] != null) {
-                Log.e("testsnull", "y-2");
-                for (int j = 0; j < plat.getChildCount(); j++) {
-                    {
-                        Case c = (Case) plat.getChildAt(j);
-                        if (c.getY() == (int) caseSel.getY() - 2 && c.getX() == (int) caseSel.getX() && c.getState()) {
-                            Log.e("tests", "y-2");
-                            lCase.add(c);
-                        }
-                    }
-                }
-            }
-
-        }
-        return lCase;
-
+        upDateBille();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        textViewScore.setText("Nb billes restantes : " + nbBilles);
+        upDateBille();
     }
 
-    private void playOneBall(GridLayout plat, int x1, int y1, int x2, int y2) {
-        int valMidX = (x1 + x2) / 2;
-        int valMidY = (y1 + y2) / 2;
-        if ((x1 == x2 && abs(y1 - y2) == 2) || (y1 == y2 && abs(x1 - x2) == 2))
-            for (int i = 0; i < plat.getChildCount(); i++) {
-                Case c = (Case) plat.getChildAt(i);
-                if (c.getX() == valMidX && c.getY() == valMidY) {
-                    if (c.getUse()) {
-                        nbCoups++;
-                        nbBilles--;
-                    }
-                }
-                if (c.getX() == x1 && c.getY() == y1) {
-                    if (c.getUse()) c.setUse(false);
-                }
-                if (c.getX() == x2 && c.getY() == y2) {
-                    if (!c.getUse()) c.setUse(true);
-                }
-
-            }
+    public void upDateBille() {
+        textViewScore.setText("Nb billes restantes : " + nbBilles);
     }
 }
