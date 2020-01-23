@@ -1,6 +1,8 @@
 package com.bldc.androidproject;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +62,8 @@ public class Plateau extends Fragment {
 
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
-                if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
+                if (noneActivCase.contains(i) && noneActivCase.contains(j)){
+                    tabIm[i][j] = null;
                 } else {
                     Case imB = null;
                     if (i == Math.round(nbLigneCol / 2) && j == Math.round(nbLigneCol / 2)) {
@@ -103,8 +107,7 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
-                                    // isEnded(); // verifie si le joueur a fini ou non sa partie
-                                    updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
+                                    updatePlateau();
                                 } // si on souhaite realiser un coup selon l'axe Y
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
                                     tabIm[selectedX][selectedY].setUse(false); // on prend la bille
@@ -114,7 +117,6 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
-                                    // isEnded();
                                     updatePlateau();
                                 }
                             }
@@ -133,6 +135,7 @@ public class Plateau extends Fragment {
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
+                    tabIm[i][j] = null;
                 } else {
                     Case imB = tabIm[i][j];
                     GridLayout.LayoutParams params = new GridLayout.LayoutParams();
@@ -160,6 +163,7 @@ public class Plateau extends Fragment {
                                 updatePlateau(); // on met a jour le plateau
                             } else if (selectedX != -1 && selectedY != -1) // si la case est vide
                             {
+                                Boolean ended = false;
                                 int targetX = (int) selected.getXc(); // on stocke la valeur d'arrivee potentielle
                                 int targetY = (int) selected.getYc();
                                 // si on souhaite realiser un coup selon l'axe X
@@ -171,7 +175,7 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
-                                    // isEnded(); // verifie si le joueur a fini ou non sa partie
+                                    ended = isEnded(); // verifie si le joueur a fini ou non sa partie
                                     updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
                                 } // si on souhaite realiser un coup selon l'axe Y
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
@@ -182,8 +186,13 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
-                                    // isEnded();
+                                    ended = isEnded();
                                     updatePlateau();
+                                }
+                                // si la partie est finie on envoie un pop up de fin
+                                if (ended)
+                                {
+                                    end();
                                 }
                             }
                         }
@@ -195,6 +204,129 @@ public class Plateau extends Fragment {
         }
         upDateBille();
     }
+
+    public Boolean isEnded(){
+
+        // la partie est finie si il ne reste qu'une bille
+        if (nbBilles == 1){
+            return true;
+        }
+        for (int i = 0; i < nbLigneCol; i++){
+            for (int j = 0; j < nbLigneCol; j++){
+                if (tabIm[i][j] != null)
+                {
+                    if (tabIm[i][j].getUse())
+                    {
+                        Case gauche = null;
+                        Case droite = null;
+                        Case bas = null;
+                        Case haut = null;
+                        Case gauche2 = null;
+                        Case droite2 = null;
+                        Case bas2 = null;
+                        Case haut2 = null;
+
+                        // prend les deux cases à gauche
+                        if (i > 0){
+                            if (tabIm[i-1][j] != null)
+                            {
+                                gauche = tabIm[i-1][j];
+                                if (i > 1){
+                                    gauche2 = tabIm[i-2][j];
+                                }
+                            }
+                        }
+                        // prend les deux cases à droite
+                        if (i < 6){
+                            if(tabIm[i+1][j] != null)
+                            {
+                                droite = tabIm[i+1][j];
+                                if (i < 5)
+                                {
+                                    droite2 = tabIm[i+2][j];
+                                }
+                            }
+                        }
+                        // prend les deux cases en haut
+                        if (j > 0){
+                            if(tabIm[i][j-1] != null)
+                            {
+                                haut = tabIm[i][j-1];
+                                if (j > 1){
+                                    haut2 = tabIm[i][j-2];
+                                }
+                            }
+                        }
+                        // prend les deux cases en bas
+                        if (j < 6){
+                            if(tabIm[i][j+1] != null){
+                                bas = tabIm[i][j+1];
+                                if (j < 5){
+                                    bas2 = tabIm[i][j+2];
+                                }
+                            }
+                        }
+                        // regarde si un coup est jouable en haut
+                        if (haut != null && haut2 != null)
+                        {
+                            if (haut.getUse() && !haut2.getUse()){
+                                return false;
+                            }
+                        }
+                        // en bas
+                        if (bas != null && bas2 != null){
+                            if (bas.getUse() && !bas2.getUse()){
+                                return false;
+                            }
+                        }
+                        // à gauche
+                        if (gauche != null && gauche2 != null){
+                            if (gauche.getUse() && !gauche2.getUse()){
+                                return false;
+                            }
+                        }
+                        // à droite
+                        if (droite != null && droite2 != null) {
+                            if (droite.getUse() && !droite2.getUse()){
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void end(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // si la partie est gagnee
+        if (nbBilles == 1){
+            // si c'est une perfect win
+            if (tabIm[3][3].getUse()){
+                builder.setMessage("Wouah tu gères !");
+            }else{
+                builder.setMessage("Bonne partie, mais tu peux faire mieux ;)");
+            }
+        }else
+        {
+            builder.setMessage("Il reste "+ nbBilles +" Billes. Dommage, tu feras mieux la prochaine fois !");
+        }
+        builder.setCancelable(false);
+        builder.setPositiveButton("Ok boomer", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getActivity(), "Ok zoomer", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.create().show();
+
+    }
+
+
+
 
     @Override
     public void onResume() {
