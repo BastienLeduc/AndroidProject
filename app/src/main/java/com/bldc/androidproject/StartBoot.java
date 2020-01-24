@@ -21,7 +21,7 @@ public class StartBoot extends Activity {
             finish();
 
             final Intent homeActivityIntent = new Intent(StartBoot.this,
-                    MainActivity.class);
+                    StartSetName.class);
             startActivity(homeActivityIntent);
         }
 
