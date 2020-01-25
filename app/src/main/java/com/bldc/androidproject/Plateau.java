@@ -338,6 +338,7 @@ public class Plateau extends Fragment {
             public void onClick(View v) {
                 createCase();
                 nbCoups = 0;
+                nbBilles = 32;
                 updateScore();
             }
         });

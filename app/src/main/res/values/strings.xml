@@ -4,9 +4,10 @@
     <string name="replay">Rejouer</string>
     <string name="help">Aide</string>
     <string name="pause">Pause</string>
+    <string name="next">Suivant</string>
     <string name="welcome">Bienvenue !</string>
     <string name="letsPlay">A toi de jouer</string>
     <string name="giveName">Saisir votre nom</string>
     <string name="onglet1">Plateau</string>
-    <string name="onglet2">Score</string>
+    <string name="score">Score</string>
 </resources>

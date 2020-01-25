@@ -22,8 +22,6 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return new Plateau(name);
-            case 1:
-                return new ScoreList();
             default:
                 return null;
         }
@@ -31,7 +29,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 
     @Nullable
@@ -40,8 +38,6 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return context.getResources().getString(R.string.onglet1);
-            case 1:
-                return context.getResources().getString(R.string.onglet2);
             default:
                 return null;
         }

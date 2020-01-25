@@ -2,7 +2,9 @@ package com.bldc.androidproject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -20,9 +22,17 @@ public class StartBoot extends Activity {
         public void onFinish() {
             finish();
 
-            final Intent homeActivityIntent = new Intent(StartBoot.this,
-                    StartSetName.class);
-            startActivity(homeActivityIntent);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            if (prefs.getString("NamePlayer", null) == null) {
+                final Intent homeActivityIntent = new Intent(StartBoot.this,
+                        StartSetName.class);
+                startActivity(homeActivityIntent);
+            } else {
+                final Intent homeActivityIntent = new Intent(StartBoot.this,
+                        MenuActivity.class);
+                startActivity(homeActivityIntent);
+            }
         }
 
         @Override
