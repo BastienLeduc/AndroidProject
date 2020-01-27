@@ -1,6 +1,7 @@
 package com.bldc.androidproject;
 
 import android.annotation.SuppressLint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.lang.reflect.Type;
+
+@SuppressLint("ValidFragment")
 public class NewScoreFragment extends Fragment {
 
     private TextView posPlayer = null;
@@ -21,14 +25,16 @@ public class NewScoreFragment extends Fragment {
     private String position;
     private String score;
     private String timer;
+    private boolean bold;
 
 
     @SuppressLint("ValidFragment")
-    public NewScoreFragment(String position, String name, String score, String timer) {
+    public NewScoreFragment(String position, String name, String score, String timer, boolean bold) {
         this.position = position;
         this.name = name;
         this.score = score;
         this.timer = timer;
+        this.bold = bold;
     }
 
 
@@ -44,6 +50,7 @@ public class NewScoreFragment extends Fragment {
         setPosition(this.position);
         setScore(this.score);
         setTimer(this.timer);
+        if (bold) this.setBold();
         return view;
     }
 
@@ -65,6 +72,13 @@ public class NewScoreFragment extends Fragment {
     public void setTimer(String timer) {
         this.timer = timer;
         timePlayer.setText(this.timer);
+    }
+
+    public void setBold() {
+        posPlayer.setTypeface(posPlayer.getTypeface(), Typeface.BOLD);
+        namePlayer.setTypeface(namePlayer.getTypeface(), Typeface.BOLD);
+        scorePlayer.setTypeface(scorePlayer.getTypeface(), Typeface.BOLD);
+        timePlayer.setTypeface(timePlayer.getTypeface(), Typeface.BOLD);
     }
 
     public String getName() {
