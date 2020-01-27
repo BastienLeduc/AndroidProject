@@ -3,25 +3,32 @@ package com.bldc.androidproject;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bldc.androidproject.Entite.Score;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -43,6 +50,8 @@ public class Plateau extends Fragment {
     int selectedX;
     int selectedY;
     private Case[][] tabIm = null;
+    private MediaPlayer mediaPlayer;
+    private ArrayList<Score> listScore;
 
     public Plateau(String name) {
         this.namePlayer = name;
@@ -55,6 +64,7 @@ public class Plateau extends Fragment {
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         btn_replay = (Button) view.findViewById(R.id.btn_replay);
         namePlayerPlateur = (TextView) view.findViewById(R.id.namePlayerPlateau);
+        mediaPlayer = MediaPlayer.create(getContext(), R.raw.buttonbip);
         nbCoups = 0;
         nbBilles = 32;
         selectedX = -1;
@@ -80,16 +90,6 @@ public class Plateau extends Fragment {
                     } else {
                         imB = new Case(getContext(), false, true, i, j);
                     }
-                    GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                    params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.columnSpec = GridLayout.spec(i);
-                    params.rowSpec = GridLayout.spec(j);
-                    imB.setLayoutParams(params);
                     imB.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -148,16 +148,6 @@ public class Plateau extends Fragment {
                     tabIm[i][j] = null;
                 } else {
                     Case imB = tabIm[i][j];
-                    GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                    params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-                    params.columnSpec = GridLayout.spec(i);
-                    params.rowSpec = GridLayout.spec(j);
-                    imB.setLayoutParams(params);
                     imB.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -302,8 +292,8 @@ public class Plateau extends Fragment {
     }
 
     public void end() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        saveScore(nbBilles, 0);
         // si la partie est gagnee
         if (nbBilles == 1) {
             // si c'est une perfect win
@@ -316,9 +306,12 @@ public class Plateau extends Fragment {
             builder.setMessage("Il reste " + nbBilles + " Billes. Dommage, tu feras mieux la prochaine fois !");
         }
         builder.setCancelable(false);
-        builder.setPositiveButton("Ok boomer", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Score", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                getActivity().finish();
+                final Intent mainActivityIntent = new Intent(getActivity(), ScoreList.class);
+                startActivity(mainActivityIntent);
                 Toast.makeText(getActivity(), "Ok zoomer", Toast.LENGTH_SHORT).show();
             }
         });
@@ -347,6 +340,41 @@ public class Plateau extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
+    }
+
+    private void saveScore(int score, int timer) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson;
+        String json;
+        Type type;
+        gson = new Gson();
+        json = prefs.getString("ListScore", "");
+        type = new TypeToken<ArrayList<Score>>() {
+        }.getType();
+        listScore = gson.fromJson(json, type);
+        if (listScore != null) {
+            for (int i = 0; i < listScore.size(); i++) {
+                if (listScore.get(i).getScore() < score && listScore.get(i).getTimer() < timer) {
+                    listScore.add(new Score(listScore.get(i).getPosition(), prefs.getString("NamePlayer", ""), score, timer));
+                }
+            }
+        } else {
+            listScore = new ArrayList<Score>();
+            listScore.add(new Score(1, prefs.getString("NamePlayer", ""), score, timer));
+        }
+        Collections.sort(listScore, Score.ScoreComparator);
+        if (listScore.size() > 10) {
+            for (int i = 10; i < listScore.size(); i++) {
+                listScore.remove(i);
+            }
+        }
+        gson = new Gson();
+        json = gson.toJson(listScore);
+        editor.putString("ListScore", json);
+        editor.apply();
+
 
     }
 

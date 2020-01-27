@@ -1,7 +1,11 @@
 package com.bldc.androidproject;
 
 import android.content.Context;
+import android.util.TypedValue;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
+
+import java.util.Objects;
 
 public class Case extends android.support.v7.widget.AppCompatImageButton {
 
@@ -16,6 +20,16 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         this.y = y;
         setState(state);
         setUse(use);
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.columnSpec = GridLayout.spec(x);
+        params.rowSpec = GridLayout.spec(y);
+        this.setLayoutParams(params);
     }
 
     public Boolean getUse() {
