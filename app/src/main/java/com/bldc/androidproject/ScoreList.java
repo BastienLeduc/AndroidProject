@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bldc.androidproject.Entite.Score;
 import com.google.gson.Gson;
@@ -38,17 +39,18 @@ public class ScoreList extends AppCompatActivity {
         }.getType();
         listScore = gson.fromJson(json, type);
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        NewScoreFragment nsf = new NewScoreFragment("Rang", "Nom", "Score", "Timer", true);
+        ft.add(R.id.list_score, nsf);
         if (listScore != null) {
-
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            NewScoreFragment nsf = new NewScoreFragment("Rang", "Nom", "Score", "Timer", true);
-            ft.add(R.id.list_score, nsf);
             for (int i = 0; i < listScore.size(); i++) {
                 ft.add(R.id.list_score, new NewScoreFragment(listScore.get(i).getPosition() + "", listScore.get(i).getName(), listScore.get(i).getScore() + "", listScore.get(i).getTimer() + "", false));
 
             }
-            ft.commit();
+        } else {
+            Toast.makeText(getApplicationContext(), "Aucun score pour le moment", Toast.LENGTH_SHORT).show();
         }
+        ft.commit();
     }
 
     @Override
