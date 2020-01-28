@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MenuActivity"></activity>
         <activity android:name=".StartSetName" />
+        <activity android:name=".ScoreList" />
         <activity android:name=".StartBoot">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

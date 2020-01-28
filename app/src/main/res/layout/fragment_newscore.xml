@@ -1,11 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorBack">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@color/colorBack"
         android:orientation="horizontal">
 
         <TextView
@@ -13,14 +15,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
-            android:textStyle="bold"></TextView>
+            android:background="@color/colorBack"
+            android:textAlignment="center"
+            android:textSize="20sp"></TextView>
 
         <TextView
             android:id="@+id/namePlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorBack"
+            android:textAlignment="center"
             android:textSize="20sp"></TextView>
 
         <TextView
@@ -28,6 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorBack"
+            android:textAlignment="center"
             android:textSize="20sp"></TextView>
 
         <TextView
@@ -35,6 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/colorBack"
+            android:textAlignment="center"
             android:textSize="20sp"></TextView>
 
     </LinearLayout>
