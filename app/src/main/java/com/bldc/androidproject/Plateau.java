@@ -27,8 +27,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -50,7 +48,9 @@ public class Plateau extends Fragment {
     int selectedX;
     int selectedY;
     private Case[][] tabIm = null;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer pressBtn;
+    private MediaPlayer pose;
+    private MediaPlayer depose;
     private ArrayList<Score> listScore;
 
     public Plateau(String name) {
@@ -64,7 +64,7 @@ public class Plateau extends Fragment {
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         btn_replay = (Button) view.findViewById(R.id.btn_replay);
         namePlayerPlateur = (TextView) view.findViewById(R.id.namePlayerPlateau);
-        mediaPlayer = MediaPlayer.create(getContext(), R.raw.buttonbip);
+        //mediaPlayer = MediaPlayer.create(getContext(), R.raw.buttonbip);
         nbCoups = 0;
         nbBilles = 32;
         selectedX = -1;
@@ -96,6 +96,7 @@ public class Plateau extends Fragment {
                             Case selected = (Case) view;
                             if (selected.getUse()) // si la case selectionnee contient une bille
                             {
+                                playPose();
                                 if (selectedX != -1 && selectedY != -1) {
                                     tabIm[selectedX][selectedY].setState(false); // on deselectionne la case qui etait selectionnee
                                 }
@@ -116,6 +117,7 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
+                                    playDepose();
                                     updatePlateau();
                                 } // si on souhaite realiser un coup selon l'axe Y
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
@@ -126,6 +128,7 @@ public class Plateau extends Fragment {
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
+                                    playDepose();
                                     updatePlateau();
                                 }
                             }
@@ -160,6 +163,7 @@ public class Plateau extends Fragment {
                                 selectedX = (int) selected.getXc(); // on stocke X
                                 selectedY = (int) selected.getYc(); //           Y
                                 tabIm[selectedX][selectedY].setState(true); // on selectionne la case
+                                playPose(); // joue le son quand on selectionne une case
                                 updatePlateau(); // on met a jour le plateau
                             } else if (selectedX != -1 && selectedY != -1) // si la case est vide
                             {
@@ -176,6 +180,7 @@ public class Plateau extends Fragment {
                                     selectedX = -1;
                                     selectedY = -1;
                                     ended = isEnded(); // verifie si le joueur a fini ou non sa partie
+                                    playDepose(); // joue le son de depot de la piece
                                     updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
                                 } // si on souhaite realiser un coup selon l'axe Y
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
@@ -187,6 +192,7 @@ public class Plateau extends Fragment {
                                     selectedX = -1;
                                     selectedY = -1;
                                     ended = isEnded();
+                                    playDepose(); // joue le son de depot de la piece
                                     updatePlateau();
                                 }
                                 // si la partie est finie on envoie un pop up de fin
@@ -333,6 +339,7 @@ public class Plateau extends Fragment {
                 nbCoups = 0;
                 nbBilles = 32;
                 updateScore();
+                playPress();
             }
         });
     }
@@ -341,6 +348,42 @@ public class Plateau extends Fragment {
     public void onPause() {
         super.onPause();
 
+    }
+
+    private void playPose(){
+        pose = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.pose);
+        pose.start();
+        pose.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                pose.stop();
+                pose.release();
+            }
+        });
+    }
+
+    private void playDepose(){
+        depose = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.depose);
+        depose.start();
+        depose.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                depose.stop();
+                depose.release();
+            }
+        });
+    }
+
+    private void playPress(){
+        pressBtn = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.menusound);
+        pressBtn.start();
+        pressBtn.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                pressBtn.stop();
+                pressBtn.release();
+            }
+        });
     }
 
     private void saveScore(int score, int timer) {
