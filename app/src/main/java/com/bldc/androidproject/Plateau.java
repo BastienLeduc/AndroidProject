@@ -44,12 +44,12 @@ public class Plateau extends Fragment {
     private TextView textViewScore = null;
     private final int nbLigneCol = 7;
     private final int nbCase = (int) Math.pow(nbLigneCol, 2);
-    Integer[] listValue = {0, 1, 5, 6};
+    private Integer[] listValue = {0, 1, 5, 6};
     private final ArrayList<Integer> noneActivCase = new ArrayList<Integer>(Arrays.asList(listValue));
     private int nbCoups;
     private int nbBilles;
-    int selectedX;
-    int selectedY;
+    private int selectedX;
+    private int selectedY;
     private Case[][] tabIm = null;
     private MediaPlayer pressBtn;
     private MediaPlayer pose;
@@ -372,13 +372,7 @@ public class Plateau extends Fragment {
         super.onResume();
 
         updateScore();
-
-        if (pauseTime != 0) {
-            chrono.setBase(chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime);
-        } else {
-            chrono.setBase(SystemClock.elapsedRealtime());
-        }
-        chrono.start();
+        startChrono();
 
         btn_replay.setOnClickListener(new View.OnClickListener(
         ) {
@@ -391,6 +385,19 @@ public class Plateau extends Fragment {
 
     }
 
+    /**
+     * Start Chrono method
+     */
+
+    public void startChrono() {
+        if (pauseTime != 0) {
+            chrono.setBase(chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime);
+        } else {
+            chrono.setBase(SystemClock.elapsedRealtime());
+        }
+        chrono.start();
+    }
+
     /***
      * replay method
      */
@@ -398,6 +405,7 @@ public class Plateau extends Fragment {
         createCase();
         nbCoups = 0;
         nbBilles = 32;
+        startChrono();
         updateScore();
         playPress();
 
