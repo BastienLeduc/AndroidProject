@@ -199,6 +199,7 @@ public class Plateau extends Fragment {
                                 }
                                 // si la partie est finie on envoie un pop up de fin
                                 if (ended) {
+                                    chrono.stop();
                                     end();
                                 }
                             }
@@ -426,31 +427,20 @@ public class Plateau extends Fragment {
     private void saveScore(int score, long chrono, String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
-        Gson gson;
-        String json;
-        Type type;
-        gson = new Gson();
-        json = prefs.getString("ListScore", "");
-        type = new TypeToken<ArrayList<Score>>() {
+        Gson gson = new Gson();
+        String json = prefs.getString("ListScore", "");
+        Type type = new TypeToken<ArrayList<Score>>() {
         }.getType();
         listScore = gson.fromJson(json, type);
         Score sctemp = null;
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
-                if (listScore.get(i).getScore() < score) {
-                    if (listScore.get(i).getChrono() < chrono) {
-                        sctemp = new Score(listScore.get(i).getPosition(), name, score, chrono);
-                        for (int j = i; j < listScore.size(); j++) {
-                            listScore.get(j).setPosition(listScore.get(j).getPosition() + 1);
-                        }
-                        break;
-                    } else {
-                        sctemp = new Score(listScore.get(i).getPosition() + 1, name, score, chrono);
-                        for (int j = i+1; j < listScore.size(); j++) {
-                            listScore.get(j).setPosition(listScore.get(j).getPosition() + 1);
-                        }
-                        break;
+                if (listScore.get(i).getScore() >= score && listScore.get(i).getChrono() > chrono) {
+                    sctemp = new Score(listScore.get(i).getPosition(), name, score, chrono);
+                    for (int j = i; j < listScore.size(); j++) {
+                        listScore.get(j).setPosition(listScore.get(j).getPosition() + 1);
                     }
+                    break;
                 }
             }
         } else {
@@ -468,7 +458,6 @@ public class Plateau extends Fragment {
         }
 
         gson = new Gson();
-
         json = gson.toJson(listScore);
         editor.putString("ListScore", json);
         editor.apply();

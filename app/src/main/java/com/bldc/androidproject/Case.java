@@ -20,10 +20,11 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         this.y = y;
         setState(state);
         setUse(use);
-        int width = getContext().getResources().getDisplayMetrics().widthPixels/8;
+        int size = getContext().getResources().getDisplayMetrics().widthPixels / 8;
+
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, width, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
-        params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, width, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
+        params.width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
         params.bottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
         params.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
         params.rightMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
