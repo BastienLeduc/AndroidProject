@@ -12,11 +12,11 @@
 
         <TextView
             android:id="@+id/namePlayerPlateau"
-            android:text="A toi de jouer !"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:text="@string/letsPlay"
             android:textAlignment="center"
             android:textSize="20sp"></TextView>
 
@@ -55,16 +55,17 @@
         android:layout_gravity="center"
         android:layout_weight="0.25"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_replay"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:layout_weight="1"
+            android:layout_weight="0.25"
             android:background="@drawable/button_roundedbutton"
             android:text="@string/replay"
             android:textColor="@color/colorPrimary"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 </LinearLayout>

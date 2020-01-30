@@ -27,7 +27,14 @@ public class NewScoreFragment extends Fragment {
     private String timer;
     private boolean bold;
 
-
+    /***
+     * Constructor NewScoreFragment to affect value of a score
+     * @param position
+     * @param name
+     * @param score
+     * @param timer
+     * @param bold
+     */
     @SuppressLint("ValidFragment")
     public NewScoreFragment(String position, String name, String score, String timer, boolean bold) {
         this.position = position;
@@ -37,7 +44,13 @@ public class NewScoreFragment extends Fragment {
         this.bold = bold;
     }
 
-
+    /***
+     * Method to create Fragment view and affect value of parameters
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,6 +72,18 @@ public class NewScoreFragment extends Fragment {
         return view;
     }
 
+
+    /***
+     * Set all text bold
+     */
+    public void setBold() {
+        posPlayer.setTypeface(posPlayer.getTypeface(), Typeface.BOLD);
+        namePlayer.setTypeface(namePlayer.getTypeface(), Typeface.BOLD);
+        scorePlayer.setTypeface(scorePlayer.getTypeface(), Typeface.BOLD);
+        timePlayer.setTypeface(timePlayer.getTypeface(), Typeface.BOLD);
+    }
+
+    //Getters & Setters
     public void setName(String name) {
         this.name = name;
         namePlayer.setText(this.name);
@@ -77,13 +102,6 @@ public class NewScoreFragment extends Fragment {
     public void setTimer(String timer) {
         this.timer = timer;
         timePlayer.setText(this.timer);
-    }
-
-    public void setBold() {
-        posPlayer.setTypeface(posPlayer.getTypeface(), Typeface.BOLD);
-        namePlayer.setTypeface(namePlayer.getTypeface(), Typeface.BOLD);
-        scorePlayer.setTypeface(scorePlayer.getTypeface(), Typeface.BOLD);
-        timePlayer.setTypeface(timePlayer.getTypeface(), Typeface.BOLD);
     }
 
     public String getName() {

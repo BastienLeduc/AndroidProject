@@ -56,6 +56,13 @@ public class Plateau extends Fragment {
     private MediaPlayer depose;
     private ArrayList<Score> listScore;
 
+    /***
+     * Method to create fragment and affect element
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plateau, container, false);
@@ -63,13 +70,21 @@ public class Plateau extends Fragment {
         btn_replay = (Button) view.findViewById(R.id.btn_replay);
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         chrono = (Chronometer) view.findViewById(R.id.chrono);
+        initValue();
+        createCase();
+        return view;
+    }
+
+    /***
+     * Intiate value at start
+     */
+    public void initValue() {
+
         nbCoups = 0;
         nbBilles = 32;
         selectedX = -1;
         selectedY = -1;
         tabIm = new Case[nbLigneCol][nbLigneCol];
-        createCase();
-        return view;
     }
 
 
@@ -336,11 +351,9 @@ public class Plateau extends Fragment {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
+    /***
+     * Restart timer and add listener to button replay
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -365,6 +378,9 @@ public class Plateau extends Fragment {
 
     }
 
+    /***
+     * replay method
+     */
     public void replay() {
         createCase();
         nbCoups = 0;
@@ -374,6 +390,9 @@ public class Plateau extends Fragment {
 
     }
 
+    /***
+     * Pause timer
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -383,6 +402,9 @@ public class Plateau extends Fragment {
 
     }
 
+    /***
+     * Play pose sound
+     */
     private void playPose() {
         pose = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.pose);
         pose.start();
@@ -395,6 +417,9 @@ public class Plateau extends Fragment {
         });
     }
 
+    /***
+     * Play depose sound
+     */
     private void playDepose() {
         depose = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.depose);
         depose.start();
@@ -407,6 +432,9 @@ public class Plateau extends Fragment {
         });
     }
 
+    /***
+     *Play press sound
+     */
     private void playPress() {
         pressBtn = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.menusound);
         pressBtn.start();
@@ -419,6 +447,12 @@ public class Plateau extends Fragment {
         });
     }
 
+    /***
+     * Save score to SharedPreferences with sort of them
+     * @param score
+     * @param chrono
+     * @param name
+     */
     private void saveScore(int score, long chrono, String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
@@ -458,8 +492,12 @@ public class Plateau extends Fragment {
         editor.apply();
     }
 
+
+    /***
+     * Update score text view
+     */
     public void updateScore() {
-        textViewScore.setText(R.string.score + " : " + nbCoups);
+        textViewScore.setText(getResources().getString(R.string.score) + " : " + nbCoups);
     }
 
 }

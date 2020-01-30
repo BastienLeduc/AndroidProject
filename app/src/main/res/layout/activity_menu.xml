@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimary"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -29,23 +30,23 @@
             android:id="@+id/btn_play"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="50dp"
+            android:layout_margin="70dp"
             android:layout_weight="1"
             android:background="@drawable/button_roundedbutton"
             android:text="@string/play"
             android:textColor="@color/colorPrimary"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/btn_scoreFromMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="50dp"
+            android:layout_margin="70dp"
             android:layout_weight="1"
             android:background="@drawable/button_roundedbutton"
             android:text="@string/score"
             android:textColor="@color/colorPrimary"
-            android:textSize="17sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 

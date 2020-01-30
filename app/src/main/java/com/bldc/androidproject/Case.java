@@ -16,6 +16,15 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
     private int x;
     private int y;
 
+
+    /***
+     * Constructor of Case class based on ImageButton, parameter state = selected or not and use = empty or not
+     * @param context
+     * @param state
+     * @param use
+     * @param x
+     * @param y
+     */
     public Case(Context context, boolean state, boolean use, int x, int y) {
         super(context);
         this.x = x;
@@ -25,6 +34,7 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
 
         int size = 0;
 
+        //rescize case with screen size
         if (getContext().getResources().getDisplayMetrics().widthPixels > getContext().getResources().getDisplayMetrics().heightPixels)
             size = getContext().getResources().getDisplayMetrics().heightPixels / 8;
         else size = getContext().getResources().getDisplayMetrics().widthPixels / 8;
@@ -41,10 +51,14 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         this.setLayoutParams(params);
     }
 
+
+    //Getters & Setters
+
     public Boolean getUse() {
         return use;
     }
 
+    //SetUse with colorBackground change
     public void setUse(Boolean use) {
         this.use = use;
         if (this.use) {
@@ -59,6 +73,7 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         return state;
     }
 
+    //SetState with colorBackground change
     public void setState(Boolean state) {
         this.state = state;
         if (this.state)

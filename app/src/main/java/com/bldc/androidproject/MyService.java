@@ -14,6 +14,9 @@ public class MyService extends Service {
         return null;
     }
 
+    /***
+     * Create MusicPlayer
+     */
     public void onCreate() {
         super.onCreate();
         player = MediaPlayer.create(this, R.raw.plateaumusic);
@@ -21,11 +24,21 @@ public class MyService extends Service {
         player.setVolume(100, 100);
     }
 
+    /***
+     * Start MusicPlayer
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     public int onStartCommand(Intent intent, int flags, int startId) {
         player.start();
         return START_STICKY;
     }
 
+    /**
+     * Stop MusicPlayer
+     */
     @Override
     public void onDestroy() {
         player.pause();

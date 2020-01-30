@@ -19,6 +19,10 @@ public class ScoreList extends AppCompatActivity {
 
     private ArrayList<Score> listScore;
 
+    /**
+     * Activity creation
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +30,9 @@ public class ScoreList extends AppCompatActivity {
         displayScore();
     }
 
+    /***
+     * Display score
+     */
     public void displayScore() {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -34,22 +41,27 @@ public class ScoreList extends AppCompatActivity {
         String json;
         Type type;
         gson = new Gson();
+        //Deserialize data
         json = prefs.getString("ListScore", "");
         type = new TypeToken<ArrayList<Score>>() {
         }.getType();
+        //Set data in ArrayList<Score> format
         listScore = gson.fromJson(json, type);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        NewScoreFragment nsf = new NewScoreFragment("Rang", "Nom", "Score", "Timer", true);
+        NewScoreFragment nsf = new NewScoreFragment(getResources().getString(R.string.rang), getResources().getString(R.string.nom), getResources().getString(R.string.score), getResources().getString(R.string.chrono), true);
         ft.add(R.id.list_score, nsf);
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
                 String valueScore = "";
-                if (listScore.get(i).getScore() == 0) valueScore = "Perfect";
+                if (listScore.get(i).getScore() == 0)
+                    valueScore = getResources().getString(R.string.parfait);
                 else {
-                    if (listScore.get(i).getScore() == 1) valueScore = "Win";
+                    if (listScore.get(i).getScore() == 1)
+                        valueScore = getResources().getString(R.string.gagne);
                     else valueScore = listScore.get(i).getScore() + "";
                 }
+                //To display chrono like mm.ss
                 int m = (int) (listScore.get(i).getChrono() / 60000);
                 int s = (int) (listScore.get(i).getChrono() - m * 60000) / 1000;
                 String mm = m < 10 ? "0" + m : m + "";
@@ -58,11 +70,14 @@ public class ScoreList extends AppCompatActivity {
 
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Aucun score pour le moment", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_list_score), Toast.LENGTH_SHORT).show();
         }
         ft.commit();
     }
 
+    /***
+     * Close activity on backpressed
+     */
     @Override
     public void onBackPressed() {
         finish();

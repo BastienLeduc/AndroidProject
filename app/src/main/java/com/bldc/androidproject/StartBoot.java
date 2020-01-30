@@ -13,6 +13,9 @@ public class StartBoot extends Activity {
     private static final int INTERVAL_COUNTDOWN_TICK = 2000;
     private static final int INTERVAL_COUNTDOWN_TIMER = 2000;
 
+    /***
+     * Activty display during 2000 tick at start
+     */
     private class TimerBoot extends CountDownTimer {
         public TimerBoot(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -31,6 +34,10 @@ public class StartBoot extends Activity {
         }
     }
 
+    /***
+     * Creation of timer
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

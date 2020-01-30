@@ -16,7 +16,10 @@ public class MenuActivity extends AppCompatActivity {
     private MediaPlayer music;
     private Handler handler = new Handler();
 
-
+    /***
+     * Creation activty with affect button & music
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,9 @@ public class MenuActivity extends AppCompatActivity {
         music.setLooping(true);
     }
 
+    /***
+     * Play music on press
+     */
     private void playPress(){
         pressBtn = (MediaPlayer) MediaPlayer.create(this ,R.raw.menusound);
         pressBtn.start();
@@ -57,6 +63,9 @@ public class MenuActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    /***
+     * Affect listener to button
+     */
     @Override
     protected void onResume() {
         super.onResume();

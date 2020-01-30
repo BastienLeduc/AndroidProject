@@ -10,6 +10,13 @@ public class Score {
     private String name;
     private int score;
 
+    /***
+     * Score Constructor to save with a list easier
+     * @param position
+     * @param name
+     * @param score
+     * @param chrono
+     */
     public Score(int position, String name, int score, long chrono) {
         this.position = position;
         this.name = name;
@@ -17,6 +24,9 @@ public class Score {
         this.chrono = chrono;
     }
 
+    /**
+     * Comparator to compare position of a score
+     */
     public static Comparator<Score> ScoreComparator = new Comparator<Score>() {
         @Override
         public int compare(Score o1, Score o2) {
@@ -24,6 +34,7 @@ public class Score {
         }
     };
 
+    //Getters & Setters
     public int getPosition() {
         return position;
     }
