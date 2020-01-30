@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="20sp"></TextView>
+            android:textSize="10sp"></TextView>
 
         <TextView
             android:id="@+id/namePlayer"
@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="20sp"></TextView>
+            android:textSize="10sp"></TextView>
 
         <TextView
             android:id="@+id/scorePlayer"
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="20sp"></TextView>
+            android:textSize="10sp"></TextView>
 
         <TextView
             android:id="@+id/timePlayer"
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="20sp"></TextView>
+            android:textSize="10sp"></TextView>
 
     </LinearLayout>
 

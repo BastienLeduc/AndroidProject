@@ -16,6 +16,7 @@ public class MenuActivity extends AppCompatActivity {
     private MediaPlayer music;
     private Handler handler = new Handler();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,11 @@ public class MenuActivity extends AppCompatActivity {
                 pressBtn.release();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -87,7 +93,6 @@ public class MenuActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         music.pause();
-        //music.release();
 
     }
 

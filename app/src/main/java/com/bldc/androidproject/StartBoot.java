@@ -21,18 +21,9 @@ public class StartBoot extends Activity {
         @Override
         public void onFinish() {
             finish();
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-            if (prefs.getString("NamePlayer", null) == null) {
-                final Intent homeActivityIntent = new Intent(StartBoot.this,
-                        StartSetName.class);
-                startActivity(homeActivityIntent);
-            } else {
-                final Intent homeActivityIntent = new Intent(StartBoot.this,
-                        MenuActivity.class);
-                startActivity(homeActivityIntent);
-            }
+            final Intent homeActivityIntent = new Intent(StartBoot.this,
+                    MenuActivity.class);
+            startActivity(homeActivityIntent);
         }
 
         @Override

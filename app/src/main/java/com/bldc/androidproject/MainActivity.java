@@ -1,76 +1,63 @@
 package com.bldc.androidproject;
 
-
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.media.MediaPlayer;
-import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private MediaPlayer music;
-    private Handler handler = new Handler();
+    Intent intentService = null;
+
+    private Plateau plateau;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        music = (MediaPlayer) MediaPlayer.create(this ,R.raw.plateaumusic);
-        music.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        music.start();
-                    }
-                });
-            }
-        });
-        music.setLooping(true);
+        intentService = new Intent(this, MyService.class);
+
+        ft = getSupportFragmentManager().beginTransaction();
+        plateau = new Plateau();
+        ft.add(R.id.linearMain, plateau);
+        ft.commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        music.start();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String namePlayer = prefs.getString("NamePlayer", null);
-        if (namePlayer != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.linearMain, new Plateau(namePlayer));
-            ft.commit();
-        } else {
-            Toast.makeText(getApplicationContext(), "Error name Player", Toast.LENGTH_SHORT).show();
-        }
+        startService(intentService);
     }
 
     @Override
-    public void onRestart(){
-        super.onRestart();
-        music.start();
-    }
-
-    @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
-        music.pause();
     }
 
     @Override
-    public void onDestroy(){
-        super.onDestroy();
-        music.stop();
-        music.release();
+    protected void onStop() {
+        super.onStop();
+        stopService(intentService);
+    }
+
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
     }
 }

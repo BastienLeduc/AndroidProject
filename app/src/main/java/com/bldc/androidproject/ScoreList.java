@@ -44,7 +44,17 @@ public class ScoreList extends AppCompatActivity {
         ft.add(R.id.list_score, nsf);
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
-                ft.add(R.id.list_score, new NewScoreFragment(listScore.get(i).getPosition() + "", listScore.get(i).getName(), listScore.get(i).getScore() + "", listScore.get(i).getTimer() + "", false));
+                String valueScore = "";
+                if (listScore.get(i).getScore() == 0) valueScore = "Perfect";
+                else {
+                    if (listScore.get(i).getScore() == 1) valueScore = "Win";
+                    else valueScore = listScore.get(i).getScore() + "";
+                }
+                int m = (int) (listScore.get(i).getChrono() / 60000);
+                int s = (int) (listScore.get(i).getChrono() - m * 60000) / 1000;
+                String mm = m < 10 ? "0" + m : m + "";
+                String ss = s < 10 ? "0" + s : s + "";
+                ft.add(R.id.list_score, new NewScoreFragment(listScore.get(i).getPosition() + "", listScore.get(i).getName(), valueScore + "", mm + "." + ss + "", false));
 
             }
         } else {

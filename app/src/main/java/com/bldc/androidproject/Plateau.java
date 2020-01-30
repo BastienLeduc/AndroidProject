@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -35,10 +40,10 @@ import static java.lang.Math.min;
 public class Plateau extends Fragment {
 
     private GridLayout plateau = null;
+    private Chronometer chrono = null;
+    private long pauseTime;
     private Button btn_replay = null;
     private TextView textViewScore = null;
-    private String namePlayer;
-    private TextView namePlayerPlateur = null;
     private final int nbLigneCol = 7;
     private final int nbCase = (int) Math.pow(nbLigneCol, 2);
     Integer[] listValue = {0, 1, 5, 6};
@@ -53,18 +58,16 @@ public class Plateau extends Fragment {
     private MediaPlayer depose;
     private ArrayList<Score> listScore;
 
-    public Plateau(String name) {
-        this.namePlayer = name;
+    public Plateau() {
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plateau, container, false);
         plateau = (GridLayout) view.findViewById(R.id.plateau);
-        textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         btn_replay = (Button) view.findViewById(R.id.btn_replay);
-        namePlayerPlateur = (TextView) view.findViewById(R.id.namePlayerPlateau);
-        //mediaPlayer = MediaPlayer.create(getContext(), R.raw.buttonbip);
+        textViewScore = (TextView) view.findViewById(R.id.textViewScore);
+        chrono = (Chronometer) view.findViewById(R.id.chrono);
         nbCoups = 0;
         nbBilles = 32;
         selectedX = -1;
@@ -139,7 +142,6 @@ public class Plateau extends Fragment {
                 }
             }
         }
-        setName();
 
     }
 
@@ -299,59 +301,94 @@ public class Plateau extends Fragment {
 
     public void end() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        saveScore(nbBilles, 0);
+
+        int score = nbBilles;
+
         // si la partie est gagnee
         if (nbBilles == 1) {
             // si c'est une perfect win
             if (tabIm[3][3].getUse()) {
                 builder.setMessage("Wouah tu gères !");
+                score = 0;
             } else {
                 builder.setMessage("Bonne partie, mais tu peux faire mieux ;)");
             }
         } else {
             builder.setMessage("Il reste " + nbBilles + " Billes. Dommage, tu feras mieux la prochaine fois !");
         }
+
+        final EditText namePlayer = new EditText(getActivity());
+        namePlayer.setHint("Votre nom");
+        builder.setView(namePlayer);
         builder.setCancelable(false);
+        final int finalScore = score;
         builder.setPositiveButton("Score", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                getActivity().finish();
-                final Intent mainActivityIntent = new Intent(getActivity(), ScoreList.class);
-                startActivity(mainActivityIntent);
-                Toast.makeText(getActivity(), "Ok zoomer", Toast.LENGTH_SHORT).show();
+                if (!namePlayer.getText().toString().isEmpty()) {
+                    getActivity().finish();
+                    final Intent mainActivityIntent = new Intent(getActivity(), ScoreList.class);
+                    startActivity(mainActivityIntent);
+                    saveScore(finalScore, SystemClock.elapsedRealtime() - chrono.getBase(), namePlayer.getText().toString());
+                } else {
+                    Toast.makeText(getActivity(), "Error nom player", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         builder.create().show();
 
+
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+
         updateScore();
 
+        if (pauseTime != 0) {
+            chrono.setBase(chrono.getBase() + SystemClock.elapsedRealtime() - pauseTime);
+        } else {
+            chrono.setBase(SystemClock.elapsedRealtime());
+        }
+        chrono.start();
 
-        btn_replay.setOnClickListener(new View.OnClickListener() {
+        btn_replay.setOnClickListener(new View.OnClickListener(
+        ) {
             @Override
             public void onClick(View v) {
-                createCase();
-                nbCoups = 0;
-                nbBilles = 32;
-                updateScore();
-                playPress();
+                replay();
+
             }
         });
+
+    }
+
+    public void replay() {
+        createCase();
+        nbCoups = 0;
+        nbBilles = 32;
+        updateScore();
+        playPress();
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
+        pauseTime = SystemClock.elapsedRealtime();
+        chrono.stop();
+
     }
 
-    private void playPose(){
-        pose = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.pose);
+    private void playPose() {
+        pose = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.pose);
         pose.start();
         pose.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -362,8 +399,8 @@ public class Plateau extends Fragment {
         });
     }
 
-    private void playDepose(){
-        depose = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.depose);
+    private void playDepose() {
+        depose = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.depose);
         depose.start();
         depose.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -374,8 +411,8 @@ public class Plateau extends Fragment {
         });
     }
 
-    private void playPress(){
-        pressBtn = (MediaPlayer) MediaPlayer.create(getActivity() ,R.raw.menusound);
+    private void playPress() {
+        pressBtn = (MediaPlayer) MediaPlayer.create(getActivity(), R.raw.menusound);
         pressBtn.start();
         pressBtn.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -386,7 +423,7 @@ public class Plateau extends Fragment {
         });
     }
 
-    private void saveScore(int score, int timer) {
+    private void saveScore(int score, long chrono, String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson;
@@ -397,35 +434,48 @@ public class Plateau extends Fragment {
         type = new TypeToken<ArrayList<Score>>() {
         }.getType();
         listScore = gson.fromJson(json, type);
+        Score sctemp = null;
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
-                if (listScore.get(i).getScore() < score && listScore.get(i).getTimer() < timer) {
-                    listScore.add(new Score(listScore.get(i).getPosition(), prefs.getString("NamePlayer", ""), score, timer));
+                if (listScore.get(i).getScore() < score) {
+                    if (listScore.get(i).getChrono() < chrono) {
+                        sctemp = new Score(listScore.get(i).getPosition(), name, score, chrono);
+                        for (int j = i; j < listScore.size(); j++) {
+                            listScore.get(j).setPosition(listScore.get(j).getPosition() + 1);
+                        }
+                        break;
+                    } else {
+                        sctemp = new Score(listScore.get(i).getPosition() + 1, name, score, chrono);
+                        for (int j = i+1; j < listScore.size(); j++) {
+                            listScore.get(j).setPosition(listScore.get(j).getPosition() + 1);
+                        }
+                        break;
+                    }
                 }
             }
         } else {
             listScore = new ArrayList<Score>();
-            listScore.add(new Score(1, prefs.getString("NamePlayer", ""), score, timer));
         }
+        if (sctemp == null) {
+            sctemp = new Score(listScore.size() + 1, name, score, chrono);
+        }
+        listScore.add(sctemp);
         Collections.sort(listScore, Score.ScoreComparator);
         if (listScore.size() > 10) {
             for (int i = 10; i < listScore.size(); i++) {
                 listScore.remove(i);
             }
         }
+
         gson = new Gson();
+
         json = gson.toJson(listScore);
         editor.putString("ListScore", json);
         editor.apply();
-
-
     }
 
     public void updateScore() {
         textViewScore.setText("Score : " + nbCoups);
     }
 
-    public void setName() {
-        namePlayerPlateur.setText("A toi de jouer " + namePlayer);
-    }
 }

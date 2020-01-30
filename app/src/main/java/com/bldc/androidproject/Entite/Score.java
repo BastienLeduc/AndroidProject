@@ -6,15 +6,15 @@ import java.util.Comparator;
 public class Score {
 
     private int position;
-    private double timer;
+    private long chrono;
     private String name;
     private int score;
 
-    public Score(int position, String name, int score, double timer) {
+    public Score(int position, String name, int score, long chrono) {
         this.position = position;
         this.name = name;
         this.score = score;
-        this.timer = timer;
+        this.chrono = chrono;
     }
 
     public static Comparator<Score> ScoreComparator = new Comparator<Score>() {
@@ -32,12 +32,12 @@ public class Score {
         this.position = position;
     }
 
-    public double getTimer() {
-        return timer;
+    public long getChrono() {
+        return chrono;
     }
 
-    public void setTimer(double timer) {
-        this.timer = timer;
+    public void setChrono(long chrono) {
+        this.chrono = chrono;
     }
 
     public String getName() {
@@ -50,6 +50,7 @@ public class Score {
 
     public int getScore() {
         return score;
+
     }
 
     public void setScore(int score) {

@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentPlateau"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBack"
@@ -6,31 +7,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25">
 
         <TextView
             android:id="@+id/namePlayerPlateau"
+            android:text="A toi de jouer !"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="20sp"></TextView>
 
-        <TextView
-            android:id="@+id/timerPlateau"
+        <Chronometer
+            android:id="@+id/chrono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:textAlignment="center"
-            android:textSize="20sp"></TextView>
+            android:textSize="20sp"></Chronometer>
 
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/textViewScore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="0.25"
         android:textAlignment="center"
         android:textSize="30sp"
@@ -48,25 +53,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
         android:layout_weight="0.25"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_roundedbutton"
-            android:text="@string/pause"
-            android:textColor="@color/colorPrimary"
-            android:textSize="17sp" />
-
         <Button
             android:id="@+id/btn_replay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_roundedbutton"
@@ -74,5 +67,4 @@
             android:textColor="@color/colorPrimary"
             android:textSize="17sp" />
     </LinearLayout>
-
 </LinearLayout>
