@@ -56,9 +56,6 @@ public class Plateau extends Fragment {
     private MediaPlayer depose;
     private ArrayList<Score> listScore;
 
-    public Plateau() {
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plateau, container, false);
@@ -375,23 +372,6 @@ public class Plateau extends Fragment {
         updateScore();
         playPress();
 
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putInt("nbCoups", nbCoups);
-        outState.putInt("nbBilles", nbBilles);
-        for (int i = 0; i < tabIm.length; i++) {
-            outState.putParcelableArray("tabIm" + i, tabIm[i]);
-        }
-        outState.putLong("pauseTime", pauseTime);
-        outState.putInt("selectedX", nbCoups);
-        outState.putInt("nbBilles", nbBilles);
-
-        int selectedX;
-        int selectedY;
     }
 
     @Override

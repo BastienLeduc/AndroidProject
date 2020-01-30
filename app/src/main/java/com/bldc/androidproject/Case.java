@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 
 import java.util.Objects;
 
-public class Case extends android.support.v7.widget.AppCompatImageButton implements Parcelable {
+public class Case extends android.support.v7.widget.AppCompatImageButton {
 
     private Boolean state;
     private Boolean use;
@@ -81,15 +81,5 @@ public class Case extends android.support.v7.widget.AppCompatImageButton impleme
 
     public void setYc(int y) {
         this.y = y;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
     }
 }
