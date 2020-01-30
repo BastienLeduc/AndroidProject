@@ -55,6 +55,7 @@ public class Plateau extends Fragment {
     private MediaPlayer pose;
     private MediaPlayer depose;
     private ArrayList<Score> listScore;
+    private long valueChrono = 0;
 
     /***
      * Method to create fragment and affect element
@@ -215,6 +216,7 @@ public class Plateau extends Fragment {
                                 // si la partie est finie on envoie un pop up de fin
                                 if (ended) {
                                     chrono.stop();
+                                    valueChrono = SystemClock.elapsedRealtime() - chrono.getBase();
                                     end();
                                 }
                             }
@@ -341,7 +343,7 @@ public class Plateau extends Fragment {
                 builder.setMessage(getResources().getString(R.string.win_play));
             }
         } else {
-            builder.setMessage(getResources().getString(R.string.lose_play1) + nbBilles + getResources().getString(R.string.lose_play2));
+            builder.setMessage(getResources().getString(R.string.lose_play1) + " " + nbBilles + " " + getResources().getString(R.string.lose_play2));
         }
 
         final int finalScore = score;
@@ -353,7 +355,7 @@ public class Plateau extends Fragment {
                     getActivity().finish();
                     final Intent mainActivityIntent = new Intent(getActivity(), ScoreList.class);
                     startActivity(mainActivityIntent);
-                    saveScore(finalScore, SystemClock.elapsedRealtime() - chrono.getBase(), namePlayer.getText().toString());
+                    saveScore(finalScore, valueChrono, namePlayer.getText().toString());
                 } else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_palyer_name), Toast.LENGTH_SHORT).show();
                 }
@@ -405,7 +407,9 @@ public class Plateau extends Fragment {
         createCase();
         nbCoups = 0;
         nbBilles = 32;
-        startChrono();
+        chrono.stop();
+        chrono.setBase(SystemClock.elapsedRealtime());
+        chrono.start();
         updateScore();
         playPress();
 

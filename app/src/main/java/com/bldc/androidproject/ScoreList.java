@@ -66,7 +66,7 @@ public class ScoreList extends AppCompatActivity {
                 int s = (int) (listScore.get(i).getChrono() - m * 60000) / 1000;
                 String mm = m < 10 ? "0" + m : m + "";
                 String ss = s < 10 ? "0" + s : s + "";
-                ft.add(R.id.list_score, new NewScoreFragment(listScore.get(i).getPosition() + "", listScore.get(i).getName(), valueScore + "", mm + "." + ss + "", false));
+                ft.add(R.id.list_score, new NewScoreFragment(listScore.get(i).getPosition() + "", listScore.get(i).getName(), valueScore + "", mm + ":" + ss + "", false));
 
             }
         } else {
