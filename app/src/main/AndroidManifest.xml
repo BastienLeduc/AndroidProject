@@ -9,15 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MenuActivity"
-            android:configChanges="orientation|screenSize"></activity>
+        <activity android:name=".MenuActivity"></activity>
         <activity
             android:name=".ScoreList"
-            android:configChanges="orientation|screenSize"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
-            android:configChanges="orientation|screenSize"></activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".StartBoot"
             android:configChanges="orientation|screenSize">

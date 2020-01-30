@@ -30,8 +30,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;
@@ -380,6 +378,23 @@ public class Plateau extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("nbCoups", nbCoups);
+        outState.putInt("nbBilles", nbBilles);
+        for (int i = 0; i < tabIm.length; i++) {
+            outState.putParcelableArray("tabIm" + i, tabIm[i]);
+        }
+        outState.putLong("pauseTime", pauseTime);
+        outState.putInt("selectedX", nbCoups);
+        outState.putInt("nbBilles", nbBilles);
+
+        int selectedX;
+        int selectedY;
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -464,7 +479,7 @@ public class Plateau extends Fragment {
     }
 
     public void updateScore() {
-        textViewScore.setText("Score : " + nbCoups);
+        textViewScore.setText(R.string.score + " : " + nbCoups);
     }
 
 }

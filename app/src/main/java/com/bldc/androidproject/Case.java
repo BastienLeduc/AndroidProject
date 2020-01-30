@@ -1,13 +1,15 @@
 package com.bldc.androidproject;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.TypedValue;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 
 import java.util.Objects;
 
-public class Case extends android.support.v7.widget.AppCompatImageButton {
+public class Case extends android.support.v7.widget.AppCompatImageButton implements Parcelable {
 
     private Boolean state;
     private Boolean use;
@@ -20,7 +22,12 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
         this.y = y;
         setState(state);
         setUse(use);
-        int size = getContext().getResources().getDisplayMetrics().widthPixels / 8;
+
+        int size = 0;
+
+        if (getContext().getResources().getDisplayMetrics().widthPixels > getContext().getResources().getDisplayMetrics().heightPixels)
+            size = getContext().getResources().getDisplayMetrics().heightPixels / 8;
+        else size = getContext().getResources().getDisplayMetrics().widthPixels / 8;
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size, Objects.requireNonNull(getContext()).getResources().getDisplayMetrics());
@@ -74,5 +81,15 @@ public class Case extends android.support.v7.widget.AppCompatImageButton {
 
     public void setYc(int y) {
         this.y = y;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

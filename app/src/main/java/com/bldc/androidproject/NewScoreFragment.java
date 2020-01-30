@@ -46,6 +46,11 @@ public class NewScoreFragment extends Fragment {
         namePlayer = (TextView) view.findViewById(R.id.namePlayer);
         scorePlayer = (TextView) view.findViewById(R.id.scorePlayer);
         timePlayer = (TextView) view.findViewById(R.id.timePlayer);
+        int size = getContext().getResources().getDisplayMetrics().widthPixels / 4;
+        posPlayer.setWidth(size);
+        timePlayer.setWidth(size);
+        scorePlayer.setWidth(size);
+        namePlayer.setWidth(size);
         setName(this.name);
         setPosition(this.position);
         setScore(this.score);

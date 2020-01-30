@@ -17,7 +17,8 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="10sp"></TextView>
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/namePlayer"
@@ -26,7 +27,8 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="10sp"></TextView>
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/scorePlayer"
@@ -35,7 +37,8 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="10sp"></TextView>
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"></TextView>
 
         <TextView
             android:id="@+id/timePlayer"
@@ -44,7 +47,8 @@
             android:layout_weight="1"
             android:background="@color/colorBack"
             android:textAlignment="center"
-            android:textSize="10sp"></TextView>
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"></TextView>
 
     </LinearLayout>
 
