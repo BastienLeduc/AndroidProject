@@ -16,4 +16,11 @@
     <string name="parfait">Parfait</string>
     <string name="gagne">Gagné</string>
     <string name="error_list_score">Aucun score sauvegardé</string>
+    <string name="error_palyer_name">Aucun nom</string>
+    <string name="your_name">Votre nom</string>
+    <string name="perfect_play">Résultat parfait</string>
+    <string name="win_play">Bonne partie, mais tu peux faire mieux ;)</string>
+    <string name="lose_play1">Il reste </string>
+    <string name="lose_play2"> Billes. Dommage, tu feras mieux la prochaine fois !</string>
+
 </resources>

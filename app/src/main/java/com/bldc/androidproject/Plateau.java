@@ -87,7 +87,9 @@ public class Plateau extends Fragment {
         tabIm = new Case[nbLigneCol][nbLigneCol];
     }
 
-
+    /***
+     * Create GridView and add Case with action
+     */
     private void createCase() {
         plateau.setRowCount(nbLigneCol);
         plateau.setColumnCount(nbLigneCol);
@@ -155,6 +157,9 @@ public class Plateau extends Fragment {
 
     }
 
+    /***
+     * Update GridView and Case state
+     */
     private void updatePlateau() {
         plateau.removeAllViews(); // on vide tout le plateau
         for (int i = 0; i < nbLigneCol; i++) {
@@ -223,6 +228,10 @@ public class Plateau extends Fragment {
         updateScore();
     }
 
+    /***
+     * Check end game
+     * @return
+     */
     public Boolean isEnded() {
 
         // la partie est finie si il ne reste qu'une bille
@@ -310,39 +319,43 @@ public class Plateau extends Fragment {
         return true;
     }
 
+    /***
+     *End action of a game
+     */
     public void end() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final EditText namePlayer = new EditText(getActivity());
+        namePlayer.setHint(getResources().getString(R.string.your_name));
+        builder.setView(namePlayer);
+        builder.setCancelable(false);
 
         int score = nbBilles;
 
-        // si la partie est gagnee
+        // if win
         if (nbBilles == 1) {
-            // si c'est une perfect win
+            // if perfect win
             if (tabIm[3][3].getUse()) {
-                builder.setMessage("Wouah tu gères !");
+                builder.setMessage(getResources().getString(R.string.perfect_play));
                 score = 0;
             } else {
-                builder.setMessage("Bonne partie, mais tu peux faire mieux ;)");
+                builder.setMessage(getResources().getString(R.string.win_play));
             }
         } else {
-            builder.setMessage("Il reste " + nbBilles + " Billes. Dommage, tu feras mieux la prochaine fois !");
+            builder.setMessage(getResources().getString(R.string.lose_play1) + nbBilles + getResources().getString(R.string.lose_play2));
         }
 
-        final EditText namePlayer = new EditText(getActivity());
-        namePlayer.setHint("Votre nom");
-        builder.setView(namePlayer);
-        builder.setCancelable(false);
         final int finalScore = score;
-        builder.setPositiveButton("Score", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getResources().getString(R.string.score), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                //if nameplayer exist change activity & save
                 if (!namePlayer.getText().toString().isEmpty()) {
                     getActivity().finish();
                     final Intent mainActivityIntent = new Intent(getActivity(), ScoreList.class);
                     startActivity(mainActivityIntent);
                     saveScore(finalScore, SystemClock.elapsedRealtime() - chrono.getBase(), namePlayer.getText().toString());
                 } else {
-                    Toast.makeText(getActivity(), "Error nom player", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_palyer_name), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -456,11 +469,13 @@ public class Plateau extends Fragment {
     private void saveScore(int score, long chrono, String name) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         SharedPreferences.Editor editor = prefs.edit();
+        //Get list score on shared preferences
         Gson gson = new Gson();
         String json = prefs.getString("ListScore", "");
         Type type = new TypeToken<ArrayList<Score>>() {
         }.getType();
         listScore = gson.fromJson(json, type);
+        //Compare score to set rank
         Score sctemp = null;
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
@@ -478,7 +493,10 @@ public class Plateau extends Fragment {
         if (sctemp == null) {
             sctemp = new Score(listScore.size() + 1, name, score, chrono);
         }
+
+        //Add score to list
         listScore.add(sctemp);
+        //sort list by rank
         Collections.sort(listScore, Score.ScoreComparator);
         if (listScore.size() > 10) {
             for (int i = 10; i < listScore.size(); i++) {
@@ -486,6 +504,7 @@ public class Plateau extends Fragment {
             }
         }
 
+        //Serialize and save list score
         gson = new Gson();
         json = gson.toJson(listScore);
         editor.putString("ListScore", json);
