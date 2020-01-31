@@ -67,5 +67,17 @@
             android:text="@string/replay"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_weight="0.25"
+            android:background="@drawable/button_roundedbutton"
+            android:text="@string/help"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
     </LinearLayout>
 </LinearLayout>

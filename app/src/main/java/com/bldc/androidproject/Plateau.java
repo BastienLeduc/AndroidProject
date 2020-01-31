@@ -41,6 +41,7 @@ public class Plateau extends Fragment {
     private Chronometer chrono = null;
     private long pauseTime;
     private Button btn_replay = null;
+    private Button btn_help = null;
     private TextView textViewScore = null;
     private final int nbLigneCol = 7;
     private final int nbCase = (int) Math.pow(nbLigneCol, 2);
@@ -56,6 +57,7 @@ public class Plateau extends Fragment {
     private MediaPlayer depose;
     private ArrayList<Score> listScore;
     private long valueChrono = 0;
+    private ArrayList<Case> lcaseHelp;
 
     /***
      * Method to create fragment and affect element
@@ -69,6 +71,7 @@ public class Plateau extends Fragment {
         View view = inflater.inflate(R.layout.fragment_plateau, container, false);
         plateau = (GridLayout) view.findViewById(R.id.plateau);
         btn_replay = (Button) view.findViewById(R.id.btn_replay);
+        btn_help = (Button) view.findViewById(R.id.btn_help);
         textViewScore = (TextView) view.findViewById(R.id.textViewScore);
         chrono = (Chronometer) view.findViewById(R.id.chrono);
         initValue();
@@ -116,6 +119,7 @@ public class Plateau extends Fragment {
                                 playPose(); // play the related sound
                                 if (selectedX != -1 && selectedY != -1) {
                                     tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
+                                    resetHelp();
                                 }
                                 selectedX = (int) selected.getXc(); // stocking X coordinates
                                 selectedY = (int) selected.getYc(); // stocking Y
@@ -178,6 +182,7 @@ public class Plateau extends Fragment {
                             {
                                 if (selectedX != -1 && selectedY != -1) {
                                     tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
+                                    resetHelp();
                                 }
                                 selectedX = (int) selected.getXc(); // stocking X coordinates
                                 selectedY = (int) selected.getYc(); // stocking Y
@@ -323,6 +328,58 @@ public class Plateau extends Fragment {
         return true;
     }
 
+    public void help() {
+        lcaseHelp = new ArrayList<Case>();
+        plateau.removeAllViews();
+        for (int i = 0; i < nbLigneCol; i++) {
+            for (int j = 0; j < nbLigneCol; j++) {
+                if (tabIm[i][j] != null) {
+                    if (tabIm[i][j].getState()) {
+                        // get left case
+                        if (i - 2 > 0) {
+                            if (tabIm[i - 1][j] != null && tabIm[i - 2][j] != null && !tabIm[i - 2][j].getUse() && tabIm[i - 1][j].getUse()) {
+
+                                tabIm[i - 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp));
+                                lcaseHelp.add(tabIm[i - 2][j]);
+                            }
+                        }
+                        //get right case
+                        if (i + 2 < 7) {
+                            if (tabIm[i + 1][j] != null && tabIm[i + 2][j] != null && !tabIm[i + 2][j].getUse() && tabIm[i + 1][j].getUse()) {
+                                tabIm[i + 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp));
+                                lcaseHelp.add(tabIm[i + 2][j]);
+                            }
+                        }
+                        // get top case
+                        if (j - 2 > 0) {
+                            if (tabIm[i][j - 1] != null && tabIm[i][j - 2] != null && !tabIm[i][j - 2].getUse() && tabIm[i][j - 1].getUse()) {
+                                tabIm[i][j - 2].setBackgroundColor(getResources().getColor(R.color.colorHelp));
+                                lcaseHelp.add(tabIm[i][j - 2]);
+                            }
+                        }
+                        // get bottom case
+                        if (j + 2 < 7) {
+                            if (tabIm[i][j + 1] != null && tabIm[i][j + 2] != null && !tabIm[i][j + 2].getUse() && tabIm[i][j + 1].getUse()) {
+                                tabIm[i][j + 2].setBackgroundColor(getResources().getColor(R.color.colorHelp));
+                                lcaseHelp.add(tabIm[i][j + 2]);
+                            }
+                        }
+                    }
+                    plateau.addView(tabIm[i][j]);
+                }
+            }
+        }
+    }
+
+    public void resetHelp() {
+        if (lcaseHelp != null) {
+            for (Case c : lcaseHelp) {
+                tabIm[c.getXc()][c.getYc()].setBackgroundColor(getResources().getColor(R.color.colorBackCase));
+            }
+        }
+        lcaseHelp = new ArrayList<Case>();
+    }
+
     /***
      *End action of a game
      */
@@ -387,6 +444,15 @@ public class Plateau extends Fragment {
             }
         });
 
+        btn_help.setOnClickListener(new View.OnClickListener(
+        ) {
+            @Override
+            public void onClick(View v) {
+                help();
+
+            }
+        });
+
     }
 
     /**
@@ -412,6 +478,7 @@ public class Plateau extends Fragment {
         chrono.stop();
         chrono.setBase(SystemClock.elapsedRealtime());
         chrono.start();
+        lcaseHelp = new ArrayList<Case>();
         updateScore();
         playPress();
 

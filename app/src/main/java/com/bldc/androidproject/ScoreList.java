@@ -1,11 +1,12 @@
 package com.bldc.androidproject;
 
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bldc.androidproject.Entite.Score;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 public class ScoreList extends AppCompatActivity {
 
     private ArrayList<Score> listScore;
+    private MediaPlayer music;
+    private Handler handler = new Handler();
 
     /**
      * Activity creation
@@ -27,6 +30,21 @@ public class ScoreList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scorelist);
+        // set the music for the score
+
+        music = (MediaPlayer) MediaPlayer.create(this, R.raw.scoremusic);
+        music.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        music.start();
+                    }
+                });
+            }
+        });
+        music.setLooping(true);
         displayScore();
     }
 
@@ -83,10 +101,31 @@ public class ScoreList extends AppCompatActivity {
         finish();
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
+        music.start();
     }
 
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        music.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        music.pause();
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        music.stop();
+        music.release();
+    }
 
 }
