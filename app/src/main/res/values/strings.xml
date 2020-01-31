@@ -2,7 +2,7 @@
     <string name="app_name">Solitaire</string>
     <string name="play">Jouer</string>
     <string name="replay">Rejouer</string>
-    <string name="help">Aide</string>
+    <string name="help">Aide Cases</string>
     <string name="pause">Pause</string>
     <string name="next">Suivant</string>
     <string name="welcome">Bienvenue !</string>

@@ -114,12 +114,12 @@ public class Plateau extends Fragment {
                         @Override
                         public void onClick(View view) {
                             Case selected = (Case) view;
+                            resetHelp();
                             if (selected.getUse()) // if the selected cell contains a marble
                             {
                                 playPose(); // play the related sound
                                 if (selectedX != -1 && selectedY != -1) {
                                     tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
-                                    resetHelp();
                                 }
                                 selectedX = (int) selected.getXc(); // stocking X coordinates
                                 selectedY = (int) selected.getYc(); // stocking Y
@@ -131,6 +131,9 @@ public class Plateau extends Fragment {
                                 int targetY = (int) selected.getYc();
                                 // if we make a move on X axis
                                 if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
+                                    tabIm[selectedX][selectedY].setState(false); // set state false
+                                    tabIm[targetX][targetY].setState(false); // set state false
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setState(false); // set state false
                                     tabIm[selectedX][selectedY].setUse(false); // take the marble
                                     tabIm[targetX][targetY].setUse(true); // putting it at the destination
                                     tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // capturing the in-between marble
@@ -142,6 +145,9 @@ public class Plateau extends Fragment {
                                     updatePlateau();
                                 } // if we make a move on Y axis
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
+                                    tabIm[selectedX][selectedY].setState(false); // set state false
+                                    tabIm[targetX][targetY].setState(false); // set state false
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setState(false); // set state false
                                     tabIm[selectedX][selectedY].setUse(false); // take the marble
                                     tabIm[targetX][targetY].setUse(true); // putting it at the destination
                                     tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // capturing the in-between marble
@@ -178,11 +184,11 @@ public class Plateau extends Fragment {
                         @Override
                         public void onClick(View view) {
                             Case selected = (Case) view;
+                            resetHelp();
                             if (selected.getUse()) // if the selected cell contains a marble
                             {
                                 if (selectedX != -1 && selectedY != -1) {
                                     tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
-                                    resetHelp();
                                 }
                                 selectedX = (int) selected.getXc(); // stocking X coordinates
                                 selectedY = (int) selected.getYc(); // stocking Y
@@ -196,6 +202,9 @@ public class Plateau extends Fragment {
                                 int targetY = (int) selected.getYc();
                                 // if we make a move on X axis
                                 if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
+                                    tabIm[selectedX][selectedY].setState(false); // set state false
+                                    tabIm[targetX][targetY].setState(false); // set state false
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setState(false); // set state false
                                     tabIm[selectedX][selectedY].setUse(false); // taking the marble
                                     tabIm[targetX][targetY].setUse(true); // putting it at the destination
                                     tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // capturing the in-between marble
@@ -208,6 +217,9 @@ public class Plateau extends Fragment {
                                     updatePlateau();
                                 } // if we make a move on Y axis
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
+                                    tabIm[selectedX][selectedY].setState(false); // set state false
+                                    tabIm[targetX][targetY].setState(false); // set state false
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setState(false); // set state false
                                     tabIm[selectedX][selectedY].setUse(false); // taking the marble
                                     tabIm[targetX][targetY].setUse(true); // putting it on final destination
                                     tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // capturing in-between marble
@@ -328,6 +340,9 @@ public class Plateau extends Fragment {
         return true;
     }
 
+    /***
+     * Check case available for the selected case
+     */
     public void help() {
         lcaseHelp = new ArrayList<Case>();
         plateau.removeAllViews();
@@ -335,42 +350,44 @@ public class Plateau extends Fragment {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (tabIm[i][j] != null) {
                     if (tabIm[i][j].getState()) {
-                        // get left case
-                        if (i - 2 > 0) {
+                        // get left case with correct conditions
+                        if (i - 2 >= 0) {
                             if (tabIm[i - 1][j] != null && tabIm[i - 2][j] != null && !tabIm[i - 2][j].getUse() && tabIm[i - 1][j].getUse()) {
-
-                                tabIm[i - 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp));
-                                lcaseHelp.add(tabIm[i - 2][j]);
+                                tabIm[i - 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp)); //Change color
+                                lcaseHelp.add(tabIm[i - 2][j]); //add to list of help case
                             }
                         }
-                        //get right case
+                        //get right case with correct conditions
                         if (i + 2 < 7) {
                             if (tabIm[i + 1][j] != null && tabIm[i + 2][j] != null && !tabIm[i + 2][j].getUse() && tabIm[i + 1][j].getUse()) {
-                                tabIm[i + 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp));
-                                lcaseHelp.add(tabIm[i + 2][j]);
+                                tabIm[i + 2][j].setBackgroundColor(getResources().getColor(R.color.colorHelp)); //Change color
+                                lcaseHelp.add(tabIm[i + 2][j]); //add to list of help case
                             }
                         }
-                        // get top case
-                        if (j - 2 > 0) {
+                        // get top case with correct conditions
+                        if (j - 2 >= 0) {
                             if (tabIm[i][j - 1] != null && tabIm[i][j - 2] != null && !tabIm[i][j - 2].getUse() && tabIm[i][j - 1].getUse()) {
-                                tabIm[i][j - 2].setBackgroundColor(getResources().getColor(R.color.colorHelp));
-                                lcaseHelp.add(tabIm[i][j - 2]);
+                                tabIm[i][j - 2].setBackgroundColor(getResources().getColor(R.color.colorHelp)); //Change color
+                                lcaseHelp.add(tabIm[i][j - 2]); //add to list of help case
                             }
                         }
-                        // get bottom case
+                        // get bottom case with correct conditions
                         if (j + 2 < 7) {
                             if (tabIm[i][j + 1] != null && tabIm[i][j + 2] != null && !tabIm[i][j + 2].getUse() && tabIm[i][j + 1].getUse()) {
-                                tabIm[i][j + 2].setBackgroundColor(getResources().getColor(R.color.colorHelp));
-                                lcaseHelp.add(tabIm[i][j + 2]);
+                                tabIm[i][j + 2].setBackgroundColor(getResources().getColor(R.color.colorHelp)); //Change color
+                                lcaseHelp.add(tabIm[i][j + 2]); //add to list of help case
                             }
                         }
                     }
-                    plateau.addView(tabIm[i][j]);
+                    plateau.addView(tabIm[i][j]); //add to gridLayout
                 }
             }
         }
     }
 
+    /***
+     * Reset color of help case and remove them from listCaseHelp
+     */
     public void resetHelp() {
         if (lcaseHelp != null) {
             for (Case c : lcaseHelp) {
@@ -556,7 +573,7 @@ public class Plateau extends Fragment {
         Type type = new TypeToken<ArrayList<Score>>() {
         }.getType();
         listScore = gson.fromJson(json, type);
-        //Compare score to set rank
+        //Comparaison scorelist to set rank
         Score sctemp = null;
         if (listScore != null) {
             for (int i = 0; i < listScore.size(); i++) {
