@@ -98,6 +98,7 @@ public class Plateau extends Fragment {
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
+                    // the null cells corresponding to the corners of the board
                     tabIm[i][j] = null;
                 } else {
                     Case imB = null;
@@ -110,36 +111,36 @@ public class Plateau extends Fragment {
                         @Override
                         public void onClick(View view) {
                             Case selected = (Case) view;
-                            if (selected.getUse()) // si la case selectionnee contient une bille
+                            if (selected.getUse()) // if the selected cell contains a marble
                             {
-                                playPose();
+                                playPose(); // play the related sound
                                 if (selectedX != -1 && selectedY != -1) {
-                                    tabIm[selectedX][selectedY].setState(false); // on deselectionne la case qui etait selectionnee
+                                    tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
                                 }
-                                selectedX = (int) selected.getXc(); // on stocke X
-                                selectedY = (int) selected.getYc(); //           Y
-                                tabIm[selectedX][selectedY].setState(true); // on selectionne la case
-                                updatePlateau(); // on met a jour le plateau
-                            } else if (selectedX != -1 && selectedY != -1) // si la case est vide
+                                selectedX = (int) selected.getXc(); // stocking X coordinates
+                                selectedY = (int) selected.getYc(); // stocking Y
+                                tabIm[selectedX][selectedY].setState(true); // selecting the cell
+                                updatePlateau(); // update the board
+                            } else if (selectedX != -1 && selectedY != -1) // if the cell's empty
                             {
-                                int targetX = (int) selected.getXc(); // on stocke la valeur d'arrivee potentielle
+                                int targetX = (int) selected.getXc(); // stocking potential destination coordinates
                                 int targetY = (int) selected.getYc();
-                                // si on souhaite realiser un coup selon l'axe X
+                                // if we make a move on X axis
                                 if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
-                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
-                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
+                                    tabIm[selectedX][selectedY].setUse(false); // take the marble
+                                    tabIm[targetX][targetY].setUse(true); // putting it at the destination
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // capturing the in-between marble
                                     nbCoups++;
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
                                     playDepose();
                                     updatePlateau();
-                                } // si on souhaite realiser un coup selon l'axe Y
+                                } // if we make a move on Y axis
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
-                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
-                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    tabIm[selectedX][selectedY].setUse(false); // take the marble
+                                    tabIm[targetX][targetY].setUse(true); // putting it at the destination
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // capturing the in-between marble
                                     nbCoups++;
                                     nbBilles--;
                                     selectedX = -1;
@@ -162,7 +163,7 @@ public class Plateau extends Fragment {
      * Update GridView and Case state
      */
     private void updatePlateau() {
-        plateau.removeAllViews(); // on vide tout le plateau
+        plateau.removeAllViews(); // we flush all view in the board
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (noneActivCase.contains(i) && noneActivCase.contains(j)) {
@@ -173,47 +174,47 @@ public class Plateau extends Fragment {
                         @Override
                         public void onClick(View view) {
                             Case selected = (Case) view;
-                            if (selected.getUse()) // si la case selectionnee contient une bille
+                            if (selected.getUse()) // if the selected cell contains a marble
                             {
                                 if (selectedX != -1 && selectedY != -1) {
-                                    tabIm[selectedX][selectedY].setState(false); // on deselectionne la case qui etait selectionnee
+                                    tabIm[selectedX][selectedY].setState(false); // we reset the selected cell
                                 }
-                                selectedX = (int) selected.getXc(); // on stocke X
-                                selectedY = (int) selected.getYc(); //           Y
-                                tabIm[selectedX][selectedY].setState(true); // on selectionne la case
-                                playPose(); // joue le son quand on selectionne une case
-                                updatePlateau(); // on met a jour le plateau
-                            } else if (selectedX != -1 && selectedY != -1) // si la case est vide
+                                selectedX = (int) selected.getXc(); // stocking X coordinates
+                                selectedY = (int) selected.getYc(); // stocking Y
+                                tabIm[selectedX][selectedY].setState(true); // selecting the cell
+                                playPose(); // play sound when selecting the cell
+                                updatePlateau(); // update the board
+                            } else if (selectedX != -1 && selectedY != -1) // if the cell's empty
                             {
                                 Boolean ended = false;
-                                int targetX = (int) selected.getXc(); // on stocke la valeur d'arrivee potentielle
+                                int targetX = (int) selected.getXc(); // stocking potential destination coordinates
                                 int targetY = (int) selected.getYc();
-                                // si on souhaite realiser un coup selon l'axe X
+                                // if we make a move on X axis
                                 if (abs(selectedX - targetX) == 2 && selectedY == targetY && tabIm[min(selectedX, targetX) + 1][selectedY].getUse()) {
-                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
-                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // on enleve la bille entre les deux
+                                    tabIm[selectedX][selectedY].setUse(false); // taking the marble
+                                    tabIm[targetX][targetY].setUse(true); // putting it at the destination
+                                    tabIm[min(selectedX, targetX) + 1][selectedY].setUse(false); // capturing the in-between marble
                                     nbCoups++;
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
-                                    ended = isEnded(); // verifie si le joueur a fini ou non sa partie
-                                    playDepose(); // joue le son de depot de la piece
-                                    updatePlateau(); // les lignes 28, 29, 30, 31 se repetent un peu avec la deuxieme condition mais bon
-                                } // si on souhaite realiser un coup selon l'axe Y
+                                    ended = isEnded(); // verify is the game's ended
+                                    playDepose(); // play the 'putting marble down' sound
+                                    updatePlateau();
+                                } // if we make a move on Y axis
                                 else if (abs(selectedY - targetY) == 2 && selectedX == targetX && tabIm[selectedX][min(selectedY, targetY) + 1].getUse()) {
-                                    tabIm[selectedX][selectedY].setUse(false); // on prend la bille
-                                    tabIm[targetX][targetY].setUse(true); // on la met a la destination voulue
-                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // on enleve la bille intermediaire
+                                    tabIm[selectedX][selectedY].setUse(false); // taking the marble
+                                    tabIm[targetX][targetY].setUse(true); // putting it on final destination
+                                    tabIm[selectedX][min(selectedY, targetY) + 1].setUse(false); // capturing in-between marble
                                     nbCoups++;
                                     nbBilles--;
                                     selectedX = -1;
                                     selectedY = -1;
                                     ended = isEnded();
-                                    playDepose(); // joue le son de depot de la piece
+                                    playDepose(); // play the 'putting marble down' sound
                                     updatePlateau();
                                 }
-                                // si la partie est finie on envoie un pop up de fin
+                                // if the game's ended, send a pop-up
                                 if (ended) {
                                     chrono.stop();
                                     valueChrono = SystemClock.elapsedRealtime() - chrono.getBase();
@@ -236,10 +237,11 @@ public class Plateau extends Fragment {
      */
     public Boolean isEnded() {
 
-        // la partie est finie si il ne reste qu'une bille
+        // the game's over if only one marble is left
         if (nbBilles == 1) {
             return true;
         }
+        // otherwise we check for every cell if a move is doable
         for (int i = 0; i < nbLigneCol; i++) {
             for (int j = 0; j < nbLigneCol; j++) {
                 if (tabIm[i][j] != null) {
@@ -253,7 +255,7 @@ public class Plateau extends Fragment {
                         Case bas2 = null;
                         Case haut2 = null;
 
-                        // prend les deux cases à gauche
+                        // selecting the two left cells
                         if (i > 0) {
                             if (tabIm[i - 1][j] != null) {
                                 gauche = tabIm[i - 1][j];
@@ -262,7 +264,7 @@ public class Plateau extends Fragment {
                                 }
                             }
                         }
-                        // prend les deux cases à droite
+                        // selecting the two right cells
                         if (i < 6) {
                             if (tabIm[i + 1][j] != null) {
                                 droite = tabIm[i + 1][j];
@@ -271,7 +273,7 @@ public class Plateau extends Fragment {
                                 }
                             }
                         }
-                        // prend les deux cases en haut
+                        // selecting the two upper cells
                         if (j > 0) {
                             if (tabIm[i][j - 1] != null) {
                                 haut = tabIm[i][j - 1];
@@ -280,7 +282,7 @@ public class Plateau extends Fragment {
                                 }
                             }
                         }
-                        // prend les deux cases en bas
+                        // selecting the two lower cells
                         if (j < 6) {
                             if (tabIm[i][j + 1] != null) {
                                 bas = tabIm[i][j + 1];
@@ -289,25 +291,25 @@ public class Plateau extends Fragment {
                                 }
                             }
                         }
-                        // regarde si un coup est jouable en haut
+                        // look up if a move is doable upward
                         if (haut != null && haut2 != null) {
                             if (haut.getUse() && !haut2.getUse()) {
                                 return false;
                             }
                         }
-                        // en bas
+                        // downward
                         if (bas != null && bas2 != null) {
                             if (bas.getUse() && !bas2.getUse()) {
                                 return false;
                             }
                         }
-                        // à gauche
+                        // leftward
                         if (gauche != null && gauche2 != null) {
                             if (gauche.getUse() && !gauche2.getUse()) {
                                 return false;
                             }
                         }
-                        // à droite
+                        // rightward
                         if (droite != null && droite2 != null) {
                             if (droite.getUse() && !droite2.getUse()) {
                                 return false;
